@@ -53,6 +53,20 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return new ArrayList<>();
+        if (type == PieceType.KING) {
+            return new MovesKing().pieceMoves(board, myPosition);
+        } else if (type == PieceType.QUEEN) {
+            return new MovesQueen().pieceMoves(board, myPosition);
+        } else if (type == PieceType.BISHOP) {
+            return new MovesBishop().pieceMoves(board, myPosition);
+        } else if (type == PieceType.KNIGHT) {
+            return new MovesKnight().pieceMoves(board, myPosition);
+        } else if (type == PieceType.ROOK) {
+            return new MovesRook().pieceMoves(board, myPosition);
+        } else if (type == PieceType.PAWN) {
+            return new MovesPawn().pieceMoves(board, myPosition);
+        } else {
+            throw new RuntimeException("asking for a piece that doesn't exist...");
+        }
     }
 }
