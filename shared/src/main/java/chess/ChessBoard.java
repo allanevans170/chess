@@ -31,9 +31,9 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        return boardSquares[position.getRow()][position.getColumn()];
     }
-
+ 
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
