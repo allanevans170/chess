@@ -11,6 +11,8 @@ import java.util.Collection;
 public class ChessGame {
     TeamColor currTurn = TeamColor.WHITE;   // first move belongs to white
 
+    ChessBoard board = new ChessBoard();
+
     public ChessGame() {
 
     }
