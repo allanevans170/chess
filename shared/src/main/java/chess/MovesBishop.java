@@ -11,7 +11,7 @@ public class MovesBishop implements PieceMovesCalculator {
         int col = myPosition.getColumn();
 
         // up left
-        for (int i = row + 1, j = col - 1; i <= 8 || j >= 1; i++, j--) {
+        for (int i = row + 1, j = col - 1; i <= 8 && j >= 1; i++, j--) {
             ChessPosition pos = new ChessPosition(i, j);
             if (board.getPiece(pos) == null) {
                 bishopMoves.add(new ChessMove(myPosition, pos, null));
@@ -24,7 +24,7 @@ public class MovesBishop implements PieceMovesCalculator {
             }
         }
         // up right
-        for (int i = row + 1, j = col + 1; i <= 8 || j <= 8; i++, j++) { // should this condition be OR?
+        for (int i = row + 1, j = col + 1; i <= 8 && j <= 8; i++, j++) { // should this condition be OR?
             ChessPosition pos = new ChessPosition(i, j);
             if (board.getPiece(pos) == null) {
                 bishopMoves.add(new ChessMove(myPosition, pos, null));
@@ -37,7 +37,7 @@ public class MovesBishop implements PieceMovesCalculator {
             }
         }
         // down right
-        for (int i = row - 1, j = col + 1; i >= 1 || j <= 8; i--, j++) {
+        for (int i = row - 1, j = col + 1; i >= 1 && j <= 8; i--, j++) {
             ChessPosition pos = new ChessPosition(i, j);
             if (board.getPiece(pos) == null) {
                 bishopMoves.add(new ChessMove(myPosition, pos, null));
@@ -50,7 +50,7 @@ public class MovesBishop implements PieceMovesCalculator {
             }
         }
         // down left
-        for (int i = row - 1, j = col - 1; i >= 1 || j >= 1; i--, j--) {
+        for (int i = row - 1, j = col - 1; i >= 1 && j >= 1; i--, j--) {
             ChessPosition pos = new ChessPosition(i, j);
             if (board.getPiece(pos) == null) {
                 bishopMoves.add(new ChessMove(myPosition, pos, null));
