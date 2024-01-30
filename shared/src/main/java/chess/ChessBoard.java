@@ -10,7 +10,7 @@ public class ChessBoard {
     private ChessPiece[][] boardSquares = new ChessPiece[9][9];
 
     public ChessBoard() {
-        resetBoard();
+        // blank
     }
 
     /**
