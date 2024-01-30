@@ -11,7 +11,7 @@ import java.util.Collection;
 public class ChessGame {
     TeamColor currTurn = TeamColor.WHITE;   // first move belongs to white
 
-    ChessBoard board = new ChessBoard();
+    ChessBoard board = new ChessBoard();    // necessary for moves validation testing?? not sure
 
     public ChessGame() {
 
