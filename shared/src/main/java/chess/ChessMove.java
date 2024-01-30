@@ -21,10 +21,11 @@ public class ChessMove {
 
     @Override
     public String toString() {
-
+        if (promotionPiece!=null) {
+            return startPosition.toString() + " -> " + endPosition.toString() + ", (promote to " + promotionPiece + ")";
+        }
         return startPosition.toString() + " -> " + endPosition.toString();
 
-        // add promotion piece if not null!!!
     }
 
     /**

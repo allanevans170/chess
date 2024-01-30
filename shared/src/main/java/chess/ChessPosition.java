@@ -18,10 +18,7 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "pos [" +
-                "rowgit =" + row +
-                ", col=" + col +
-                ']';
+        return "pos[" + row + ',' + col + ']';
     }
 
     /**
