@@ -13,6 +13,22 @@ public class ChessBoard {
         // blank
     }
 
+    /*@Override
+    public String toString() {
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                System.out.print("|");
+                if (boardSquares[i][j] != null) {
+                    if (boardSquares[i][j].getTeamColor() )
+                            + " " + boardSquares[i][j].getPieceType() + " ");
+                } else {
+                    System.out.print("null ");
+                }
+            }
+            System.out.println();
+        }
+    }*/
+
     /**
      * Adds a chess piece to the chessboard
      *
