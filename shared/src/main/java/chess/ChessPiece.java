@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList; // added to support arraylist in pieceMoves
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -53,20 +54,34 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        if (type == PieceType.KING) {
-            return new MovesKing().pieceMoves(board, myPosition);
-        } else if (type == PieceType.QUEEN) {
-            return new MovesQueen().pieceMoves(board, myPosition);
-        } else if (type == PieceType.BISHOP) {
-            return new MovesBishop().pieceMoves(board, myPosition);
-        } else if (type == PieceType.KNIGHT) {
-            return new MovesKnight().pieceMoves(board, myPosition);
-        } else if (type == PieceType.ROOK) {
-            return new MovesRook().pieceMoves(board, myPosition);
-        } else if (type == PieceType.PAWN) {
-            return new MovesPawn().pieceMoves(board, myPosition);
-        } else {
-            throw new RuntimeException("asking for a piece that doesn't exist...");
+        switch (type) {
+            case KING:
+                return new MovesKing().pieceMoves(board, myPosition);   // calling a method
+            case QUEEN:
+                return new MovesQueen().pieceMoves(board, myPosition);
+            case BISHOP:
+                return new MovesBishop().pieceMoves(board, myPosition);
+            case KNIGHT:
+                return new MovesKnight().pieceMoves(board, myPosition);
+            case ROOK:
+                return new MovesRook().pieceMoves(board, myPosition);
+            case PAWN:
+                return new MovesPawn().pieceMoves(board, myPosition);
+            default:
+                throw new RuntimeException("asking for a piece that doesn't exist...");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 }
