@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Arrays;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -79,5 +81,33 @@ public class ChessBoard {
             boardSquares[7][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         }
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that=(ChessBoard) o;
+        // I believe I need a for loop here to compare each element of the 2D array
+        for (int i = 0; i <= 8; i++) {
+            for (int j = 0; j <= 8; j++) {
+                if (boardSquares[i][j] != null && !boardSquares[i][j].equals(that.boardSquares[i][j])) {
+                        return false;
+                } else if (boardSquares[i][j] == null && that.boardSquares[i][j] != null) {
+                    return false;
+                } else if (boardSquares[i][j] != null && that.boardSquares[i][j] == null) {
+                    return false;
+                } else {
+                    System.out.println("something weird is happening in boardSquares.equals()");
+                }
+            }
+        }
+        return true;
+        //return Arrays.equals(boardSquares, that.boardSquares);
+    }
+
+    @Override
+    public int hashCode() {     // needs to be more intense, I think
+        return Arrays.hashCode(boardSquares);
     }
 }
