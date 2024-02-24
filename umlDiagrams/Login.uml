@@ -1,0 +1,23 @@
+title Login
+
+actor Client
+participant Server
+participant LoginService
+participant DataAccess
+database db
+
+
+group #orange Login #white
+Client -> Server: [POST] /session\n{username, password}
+Server -> LoginService: login(username, password)
+LoginService ->DataAccess: getUser(username)
+DataAccess--> db: SELECT username,\npassword from user
+DataAccess--> LoginService: username, password
+LoginService->DataAccess: loginUser(username, password)
+
+LoginService ->DataAccess: createAuth(username)
+DataAccess -> db: INSERT username, authToken \nINTO authData
+DataAccess --> LoginService: authToken
+LoginService--> Server: authToken
+Server --> Client: 200\n{authToken}
+end
