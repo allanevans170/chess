@@ -89,8 +89,8 @@ public class ChessBoard {
         if (o == null || getClass() != o.getClass()) return false;
         ChessBoard that=(ChessBoard) o;
         // I believe I need a for loop here to compare each element of the 2D array
-        for (int i = 0; i <= 8; i++) {
-            for (int j = 0; j <= 8; j++) {
+        //for (int i = 0; i <= 8; i++) {
+            /*for (int j = 0; j <= 8; j++) {
                 if (boardSquares[i][j] != null && !boardSquares[i][j].equals(that.boardSquares[i][j])) {
                         return false;
                 } else if (boardSquares[i][j] == null && that.boardSquares[i][j] != null) {
@@ -100,14 +100,14 @@ public class ChessBoard {
                 } else {
                     System.out.println("something weird is happening in boardSquares.equals()");
                 }
-            }
-        }
-        return true;
-        //return Arrays.equals(boardSquares, that.boardSquares);
+            }*/
+        //}
+        //return true;
+        return Arrays.deepEquals(boardSquares, that.boardSquares);
     }
 
     @Override
     public int hashCode() {     // needs to be more intense, I think
-        return Arrays.hashCode(boardSquares);
+        return Arrays.deepHashCode(boardSquares);
     }
 }
