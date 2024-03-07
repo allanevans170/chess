@@ -3,10 +3,7 @@ package chess;
 import java.util.Collection;
 import java.util.ArrayList;
 
-public class MovesRook implements PieceMovesCalculator {
+public class MovesRook extends MoveMaker {
   Collection<ChessMove> rookMoves = new ArrayList<ChessMove>();
-  @Override
-  public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-    return rookMoves;
-  }
+
 }

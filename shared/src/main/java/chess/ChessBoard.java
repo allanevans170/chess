@@ -88,7 +88,7 @@ public class ChessBoard {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessBoard that=(ChessBoard) o;
-        // I believe I need a for loop here to compare each element of the 2D array
+        // I believe I need a for loop here to compare each element of the 2D array - done with deepEquals???
         //for (int i = 0; i <= 8; i++) {
             /*for (int j = 0; j <= 8; j++) {
                 if (boardSquares[i][j] != null && !boardSquares[i][j].equals(that.boardSquares[i][j])) {
