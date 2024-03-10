@@ -13,15 +13,17 @@ public class ChessPosition {
     private final int row;
     private final int col;
 
-    public ChessPosition(int row, int col) {
+    public ChessPosition(int col, int row) {
         this.row=row;
         this.col=col;
     }
 
     @Override
     public String toString() {
-        return "pos[r" + row + ",c" + col + "]";
+        return "pos[c" + (char)('a'+ col -1) + ",r" + row + "]";
     }
+    // could be modified for chess notation
+    // return "pos[" + (char)('a' + col - 1) + row + "]";
 
     /**
      * @return which row this position is in
