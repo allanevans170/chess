@@ -3,12 +3,10 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MoveMaker {
-  Collection<ChessMove> directionalMoves=new ArrayList<ChessMove>();
+public abstract class MoveMaker {
+  Collection<ChessMove> directionalMoves=new ArrayList<>();
 
-  public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-    throw new RuntimeException("Not implemented - in MoveMaker");
-  }
+  public abstract Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition);
 
   enum Directions {
     UP(1, 0),
@@ -64,8 +62,10 @@ public class MoveMaker {
     }
     return directionalMoves;
   }
+
+
 }
-  // put knight, pawn, and king moves in their own classes (maybe they should still use directions enum
+
 
   /*void squareChecker(ChessBoard board, ChessPosition currPos, ChessPosition pos, ChessGame.TeamColor teamColor) {
     if (board.getPiece(pos) == null) {
