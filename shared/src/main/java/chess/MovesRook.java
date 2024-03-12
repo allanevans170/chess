@@ -11,7 +11,7 @@ public class MovesRook extends MoveMaker {
   @Override
   public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
     for (Directions direction : rookDirections) {
-      rookMoves.addAll(omniDirectionalMover(myPosition, direction));
+      rookMoves.addAll(omniDirectionalMover(myPosition, direction, board));
     }
     return rookMoves;
   }

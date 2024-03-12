@@ -12,7 +12,7 @@ public class MovesQueen extends MoveMaker {
   @Override
   public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
     for (Directions direction : queenDirections) {
-      queenMoves.addAll(omniDirectionalMover(myPosition, direction));
+      queenMoves.addAll(omniDirectionalMover(myPosition, direction, board));
     }
     return queenMoves;
   }

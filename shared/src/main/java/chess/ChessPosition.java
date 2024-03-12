@@ -20,10 +20,9 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "pos[c" + (char)('a'+ col -1) + ",r" + row + "]";
+        return "[" + (char)('a'+ col - 1) + row + "]";
     }
-    // could be modified for chess notation
-    // return "pos[" + (char)('a' + col - 1) + row + "]";
+    // I haven't fully tested this method of chess notation toString yet...
 
     /**
      * @return which row this position is in
