@@ -24,8 +24,8 @@ public abstract class MoveMaker {
     UP2_LEFT(2, -1),
     UP2_RIGHT(2, 1),
     DOWN2_LEFT(-2, -1),
-    DOWN2_RIGHT(-2, 1),
-    UP2 (0, 2);
+    DOWN2_RIGHT(-2, 1);
+    //UP2 (0, 2);
 
     private final int deltaRow;
     private final int deltaCol;
