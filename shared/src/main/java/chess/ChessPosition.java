@@ -13,7 +13,7 @@ public class ChessPosition {
     private final int row;
     private final int col;
 
-    public ChessPosition(int col, int row) {
+    public ChessPosition(int row, int col) {    // this is an OBTUSE way to structure the tests, doesn't follow chess notation or x y notation********************************************************
         this.row=row;
         this.col=col;
     }
@@ -22,7 +22,6 @@ public class ChessPosition {
     public String toString() {
         return "[" + (char)('a'+ col - 1) + row + "]";
     }
-    // I haven't fully tested this method of chess notation toString yet...
 
     /**
      * @return which row this position is in

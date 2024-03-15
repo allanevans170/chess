@@ -11,20 +11,9 @@ public class MovesKnight extends MoveMaker {
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         for (Directions direction : knightDirections) {
-            int deltaX=direction.getDeltaX();     // Initializing x and y
-            int deltaY=direction.getDeltaY();
-
-            int y=myPosition.getRow();
-            int x=myPosition.getColumn();
-            x+=deltaX;
-            y+=deltaY;
-            if (x < 1 || x > 8 || y < 1 || y > 8) {
-                continue;
+            if (moveHelper(myPosition, direction, board) != null) {
+                knightMoves.add(moveHelper(myPosition, direction, board));
             }
-            if (squareValidate(myPosition, new ChessPosition(x, y), board) == 0) {    // friendly
-                continue;
-            }
-            knightMoves.add(new ChessMove(myPosition, new ChessPosition(x, y), null));
         }
         return knightMoves;
     }
