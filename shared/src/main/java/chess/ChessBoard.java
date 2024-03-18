@@ -9,27 +9,31 @@ import java.util.Arrays;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ChessPiece[][] boardSquares = new ChessPiece[9][9];
+    private final ChessPiece[][] boardSquares = new ChessPiece[9][9]; // may be final???
 
     public ChessBoard() {
         // blank
     }
 
-    /*@Override
+    @Override
     public String toString() {
-        for (int i = 1; i <= 8; i++) {
-            for (int j = 1; j <= 8; j++) {
-                System.out.print("|");
+        StringBuilder boardString = new StringBuilder();
+        for (int i = 8; i >= 1; i--) {
+            for (int j = 1; j <= 8; j++) {      // columns
+                boardString.append("|");
                 if (boardSquares[i][j] != null) {
-                    if (boardSquares[i][j].getTeamColor() )
-                            + " " + boardSquares[i][j].getPieceType() + " ");
+                    //boardString.append(" [" + getPiece(new ChessPosition(i,j)).toString() + "] ");
+                    boardString.append(getPiece(new ChessPosition(i, j)).toString());
                 } else {
-                    System.out.print("null ");
+                    //ChessPosition placeHolder = new ChessPosition(i, j);
+                    //boardString.append("_"+ placeHolder.toString() + "_");
+                    boardString.append(" ");
                 }
             }
-            System.out.println();
+            boardString.append("|\n");
         }
-    }*/
+        return boardString.toString();
+    }
 
     /**
      * Adds a chess piece to the chessboard
@@ -50,6 +54,21 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return boardSquares[position.getRow()][position.getColumn()];
+    }
+
+    public void updateSquare(ChessMove move) {
+        //boardSquares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()] = null;
+        if (move.getPromotionPiece() == null) {
+            boardSquares[move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = getPiece(move.getStartPosition()); // move piece
+            boardSquares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()] = null;     // reset start square
+        } else {
+            //ChessPosition testing = move.getStartPosition();
+            //ChessPiece testPiece = getPiece(testing);
+            //ChessPiece promotedPiece = new ChessPiece(ChessGame.TeamColor.WHITE, move.getPromotionPiece());
+            ChessPiece promotedPiece = new ChessPiece(getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece());
+            boardSquares[move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = promotedPiece;
+            boardSquares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()] = null;
+        }
     }
 
     /**

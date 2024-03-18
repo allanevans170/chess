@@ -1,6 +1,6 @@
 package chess;
 
-import java.util.ArrayList; // added to support arraylist in pieceMoves
+//import java.util.ArrayList; // added to support arraylist in pieceMoves
 import java.util.Collection;
 import java.util.Objects;
 
@@ -24,12 +24,18 @@ public class ChessPiece {
      * The various different chess piece options
      */
     public enum PieceType {
-        KING,
-        QUEEN,
-        BISHOP,
-        KNIGHT,
-        ROOK,
-        PAWN
+        KING('K'),
+        QUEEN('Q'),
+        BISHOP('B'),
+        KNIGHT('N'),
+        ROOK('R'),
+        PAWN('P');
+
+        private final char symbol;
+
+        PieceType(char symbol) {
+            this.symbol = symbol;
+        }
     }
 
     /**
@@ -54,24 +60,27 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        switch (type) {
-            case KING:
-                return new MovesKing().pieceMoves(board, myPosition);   // calling a method
-            case QUEEN:
-                return new MovesQueen().pieceMoves(board, myPosition);
-            case BISHOP:
-                return new MovesBishop().pieceMoves(board, myPosition);
-            case KNIGHT:
-                return new MovesKnight().pieceMoves(board, myPosition);
-            case ROOK:
-                return new MovesRook().pieceMoves(board, myPosition);
-            case PAWN:
-                return new MovesPawn().pieceMoves(board, myPosition);
-            default:
-                throw new RuntimeException("asking for a piece that doesn't exist...");
-        }
+        return switch (type) {
+            case KING -> new MovesKing().pieceMoves(board, myPosition);   // calling a method
+            case QUEEN -> new MovesQueen().pieceMoves(board, myPosition);
+            case BISHOP -> new MovesBishop().pieceMoves(board, myPosition);
+            case KNIGHT -> new MovesKnight().pieceMoves(board, myPosition);
+            case ROOK -> new MovesRook().pieceMoves(board, myPosition);
+            case PAWN -> new MovesPawn().pieceMoves(board, myPosition);
+            default -> throw new RuntimeException("asking for a piece that doesn't exist...");
+        };
     }
 
+    @Override
+    public String toString() {
+        if (pieceColor == ChessGame.TeamColor.WHITE) {
+            return Character.toString(type.symbol);
+        } else {
+            char piece = Character.toLowerCase(type.symbol);
+            return Character.toString(piece);
+        }
+
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
