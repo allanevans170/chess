@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -166,26 +167,36 @@ public class ChessGame {
 
         TeamColor getOpposingTeam = getOpposingTeam(teamColor);         // enemy color
         Collection<ChessPosition> opposingTeamLocations = board.teamLocations(getOpposingTeam); // enemy locations
-        Collection<ChessMove> dangerEnemyMoves = kwisatzHaderach(opposingTeamLocations);      // collection of all possible enemy moves
+        //Collection<ChessMove> dangerEnemyMoves = kwisatzHaderach(opposingTeamLocations);      // collection of all possible enemy moves
         Collection<ChessMove> checkMoves = new ArrayList<>();
 
-        for (ChessPosition enemyPosition : opposingTeamLocations) {
-            Collection<ChessMove> enemyMoves = validMoves(enemyPosition);
-            for (ChessMove enemyMove : enemyMoves) {
-                if (enemyMove.getEndPosition().equals(kingLocation)) {
-                    checkMoves.add(enemyMove);
+        for (ChessPosition enemyPosition : opposingTeamLocations) {             // for each enemy piece
+            Collection<ChessMove> enemyPiecesMoves = validMoves(enemyPosition);
+            for (ChessMove enemyPieceMove : enemyPiecesMoves) {                            // for each move by that enemy
+                if (enemyPieceMove.getEndPosition().equals(kingLocation)) {          // if the move is a check
+                    checkMoves.add(enemyPieceMove);                                  // add to list of checks
                 }
-                for (ChessMove kingMove : kingMoves) {                  // this is getting nastily nested...
-                    if (move.getEndPosition().equals(kingMove.getEndPosition())) {
-                        kingMoves.remove(kingMove);
+                //for (ChessMove kingMove : kingMoves) {                  // this is getting nastily nested...
+                //    if (enemyPieceMove.getEndPosition().equals(kingMove.getEndPosition())) {
+                //        kingMoves.remove(kingMove);
+                //    }
+                //}
+                Iterator<ChessMove> kingMoveIterator = kingMoves.iterator();
+                while (kingMoveIterator.hasNext()) {
+                    ChessMove kingMove = kingMoveIterator.next();
+                    if (enemyPieceMove.getEndPosition().equals(kingMove.getEndPosition())) {
+                        kingMoveIterator.remove();
                     }
                 }
             }
         }
-
+        if (checkMoves.size() > 1) {
+            return true;
+        }
+        return false;
     }
 
-    public Collection<ChessMove> kwisatzHaderach(Collection<ChessPosition> opposingTeamLocations) {
+    /*public Collection<ChessMove> kwisatzHaderach(Collection<ChessPosition> opposingTeamLocations) {
         Collection<ChessMove> kwisatzHaderach = new ArrayList<>();
         Collection
         for (ChessPosition position : opposingTeamLocations) {
@@ -198,7 +209,7 @@ public class ChessGame {
             kwisatzHaderach.addAll(eachEnemyMoves);
         }
         return kwisatzHaderach;
-    }
+    }*/
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
