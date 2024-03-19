@@ -87,6 +87,10 @@ public class ChessBoard {
         return teamPositions;
     }
 
+    //public Collection<ChessMove> dangerMoves(ChessGame.TeamColor team) {
+    //
+    //}
+
     public void updateSquare(ChessMove move) {
         //boardSquares[move.getStartPosition().getRow()][move.getStartPosition().getColumn()] = null;
         if (move.getPromotionPiece() == null) {

@@ -143,6 +143,8 @@ public class ChessGame {
         }
     }
 
+
+
     /**
      * Determines if the given team is in checkmate
      *
@@ -160,24 +162,42 @@ public class ChessGame {
 
         ChessPosition kingLocation = board.getKingLocation(teamColor);
         Collection<ChessMove> kingMoves = validMoves(kingLocation);
+        //Collection<ChessPosition> kingEndLocations = new ArrayList<>();
 
         TeamColor getOpposingTeam = getOpposingTeam(teamColor);         // enemy color
         Collection<ChessPosition> opposingTeamLocations = board.teamLocations(getOpposingTeam); // enemy locations
-        Collection<ChessMove> kwizatzHaderach = new ArrayList<>();      // collection of all possible enemy moves
+        Collection<ChessMove> dangerEnemyMoves = kwisatzHaderach(opposingTeamLocations);      // collection of all possible enemy moves
+        Collection<ChessMove> checkMoves = new ArrayList<>();
 
-        for (ChessPosition position : opposingTeamLocations) {
-            Collection<ChessMove> eachEnemyMoves=validMoves(position);
-            kwizatzHaderach.addAll(eachEnemyMoves);
-        }
-
-        for (ChessMove kingMove : kingMoves) {
-            //boolean kingMoveValid=true;
-
-            if (kingMoveValid == true) {
-                return false; // options for king to move
+        for (ChessPosition enemyPosition : opposingTeamLocations) {
+            Collection<ChessMove> enemyMoves = validMoves(enemyPosition);
+            for (ChessMove enemyMove : enemyMoves) {
+                if (enemyMove.getEndPosition().equals(kingLocation)) {
+                    checkMoves.add(enemyMove);
+                }
+                for (ChessMove kingMove : kingMoves) {                  // this is getting nastily nested...
+                    if (move.getEndPosition().equals(kingMove.getEndPosition())) {
+                        kingMoves.remove(kingMove);
+                    }
+                }
             }
         }
-        return true; // checkmate
+
+    }
+
+    public Collection<ChessMove> kwisatzHaderach(Collection<ChessPosition> opposingTeamLocations) {
+        Collection<ChessMove> kwisatzHaderach = new ArrayList<>();
+        Collection
+        for (ChessPosition position : opposingTeamLocations) {
+            Collection<ChessMove> eachEnemyMoves=validMoves(position);
+            for (ChessMove move : eachEnemyMoves) {
+                if (move.getEndPosition().equals(board.getKingLocation(getOpposingTeam(currTurn)))) {
+                    kwisatzHaderach.add(move);
+                }
+            }
+            kwisatzHaderach.addAll(eachEnemyMoves);
+        }
+        return kwisatzHaderach;
     }
 
     /**
