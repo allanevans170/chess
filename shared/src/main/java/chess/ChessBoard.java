@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -54,6 +55,35 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return boardSquares[position.getRow()][position.getColumn()];
+    }
+
+    public ChessPosition getKingLocation(ChessGame.TeamColor team) {
+        ChessPosition kingPosition = null;
+        for (int i = 8; i >= 1; i--) {          // rows
+            for (int j = 1; j <= 8; j++) {      // columns
+                if (boardSquares[i][j] != null && boardSquares[i][j].getPieceType() == ChessPiece.PieceType.KING && boardSquares[i][j].getTeamColor() == team) {
+                    kingPosition = new ChessPosition(i, j);
+                    return kingPosition;
+                }
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<ChessPosition> teamLocations(ChessGame.TeamColor team) {
+        ArrayList<ChessPosition> teamPositions = new ArrayList<>();
+
+        int counter = 0;
+        for (int i = 8; i >= 1; i--) {          // rows
+            for (int j = 1; j <= 8; j++) {      // columns
+                if (boardSquares[i][j] != null && boardSquares[i][j].getTeamColor() == team) {
+                    ChessPosition temp = new ChessPosition(i,j);
+                    teamPositions.add(temp);
+                    counter++;
+                }
+            }
+        }
+        return teamPositions;
     }
 
     public void updateSquare(ChessMove move) {

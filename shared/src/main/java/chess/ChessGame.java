@@ -115,7 +115,32 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition kingLocation = board.getKingLocation(teamColor);
+
+        TeamColor opposingTeam = getOpposingTeam(teamColor);
+
+        ArrayList<ChessPosition> opposingTeamLocations = board.teamLocations(opposingTeam);
+
+        for (ChessPosition position : opposingTeamLocations) {
+            Collection<ChessMove> validMoves = validMoves(position);
+            for (ChessMove move : validMoves) {
+                if (move.getEndPosition().equals(kingLocation)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
+        // I need to locate the king of teamColor and determine if any of the available moves
+        // of the opposing team can capture the king
+    }
+
+    private TeamColor getOpposingTeam(TeamColor teamColor) {
+        if (teamColor == TeamColor.WHITE) {
+            return TeamColor.BLACK;
+        } else {
+            return TeamColor.WHITE;
+        }
     }
 
     /**
@@ -125,7 +150,24 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // if the king is in check, and there are no valid moves, then it is checkmate
+        // check moves surrounding the king
+
+        ChessPosition kingLocation = board.getKingLocation(teamColor);
+        Collection<ChessMove> validMoves = validMoves(kingLocation);
+
+        TeamColor getOpposingTeam = getOpposingTeam(teamColor);
+        ArrayList<ChessPosition> opposingTeamLocations = board.teamLocations(getOpposingTeam);
+
+        for (ChessPosition position : opposingTeamLocations) {
+            Collection<ChessMove> validMoves = validMoves(position);
+            for (ChessMove move : validMoves) {
+                if (move.getEndPosition().equals(kingLocation)) {
+                    return true;
+                }
+            }
+        }
+
     }
 
     /**
