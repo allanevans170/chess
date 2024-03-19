@@ -119,7 +119,7 @@ public class ChessGame {
 
         TeamColor opposingTeam = getOpposingTeam(teamColor);
 
-        ArrayList<ChessPosition> opposingTeamLocations = board.teamLocations(opposingTeam);
+        Collection<ChessPosition> opposingTeamLocations = board.teamLocations(opposingTeam);
 
         for (ChessPosition position : opposingTeamLocations) {
             Collection<ChessMove> validMoves = validMoves(position);
@@ -153,21 +153,31 @@ public class ChessGame {
         // if the king is in check, and there are no valid moves, then it is checkmate
         // check moves surrounding the king
 
-        ChessPosition kingLocation = board.getKingLocation(teamColor);
-        Collection<ChessMove> validMoves = validMoves(kingLocation);
-
-        TeamColor getOpposingTeam = getOpposingTeam(teamColor);
-        ArrayList<ChessPosition> opposingTeamLocations = board.teamLocations(getOpposingTeam);
-
-        for (ChessPosition position : opposingTeamLocations) {
-            Collection<ChessMove> validMoves = validMoves(position);
-            for (ChessMove move : validMoves) {
-                if (move.getEndPosition().equals(kingLocation)) {
-                    return true;
-                }
-            }
+        // need to check if the king is in check first?
+        if (isInCheck(teamColor) == false) {
+            return false;
         }
 
+        ChessPosition kingLocation = board.getKingLocation(teamColor);
+        Collection<ChessMove> kingMoves = validMoves(kingLocation);
+
+        TeamColor getOpposingTeam = getOpposingTeam(teamColor);         // enemy color
+        Collection<ChessPosition> opposingTeamLocations = board.teamLocations(getOpposingTeam); // enemy locations
+        Collection<ChessMove> kwizatzHaderach = new ArrayList<>();      // collection of all possible enemy moves
+
+        for (ChessPosition position : opposingTeamLocations) {
+            Collection<ChessMove> eachEnemyMoves=validMoves(position);
+            kwizatzHaderach.addAll(eachEnemyMoves);
+        }
+
+        for (ChessMove kingMove : kingMoves) {
+            //boolean kingMoveValid=true;
+
+            if (kingMoveValid == true) {
+                return false; // options for king to move
+            }
+        }
+        return true; // checkmate
     }
 
     /**
