@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -10,10 +11,11 @@ import java.util.Collection;
  */
 public class ChessGame {
     private ChessBoard board = new ChessBoard();
-    private TeamColor currTurn = TeamColor.WHITE;
+    private TeamColor currTurn;
 
     public ChessGame() {
         // why empty constructor???
+        currTurn = TeamColor.WHITE;     // when object is constructed, default is that it is white's turn... right?
     }
 
     /**
@@ -48,7 +50,25 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        Collection<ChessMove> moves;
+        ChessPiece currPiece = board.getPiece(startPosition);
+
+        if (currPiece == null) {
+            return null;
+        } else {
+            moves = currPiece.pieceMoves(board, startPosition);
+        }
+
+        for (ChessMove move : moves) {
+            // clone the board
+            // update square on cloned board
+
+            // is in check?
+            // if in check, remove move from list of moves
+        }
+        return moves;
+        // needs to use isInCheck... (don't get circular)!!!
     }
 
     /**
@@ -59,6 +79,8 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         throw new RuntimeException("Not implemented");
+        // if a move is valid, then apply it to the board, update board...
+
     }
 
     /**
@@ -67,8 +89,12 @@ public class ChessGame {
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    public boolean isInCheck(TeamColor teamColor) {
+    public boolean isInCheck(TeamColor teamColor) {     // implements Cloneable
         throw new RuntimeException("Not implemented");
+        // make the move... are you still in the check? end position of opposite team on your king's spot
+        // check all
+        //
+        // clone your board fore every move, throw away the clone
     }
 
     /**
