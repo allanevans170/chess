@@ -8,8 +8,8 @@ import java.util.Arrays;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
-    private final ChessPiece[][] boardSquares = new ChessPiece[9][9];
+public class ChessBoard implements Cloneable {
+    private final ChessPiece[][] boardSquares = new ChessPiece[9][9];           // why final?
 
     public ChessBoard() {
         // empty constructor?
@@ -36,6 +36,13 @@ public class ChessBoard {
         return boardSquares[position.getRow()][position.getColumn()];
     }
 
+    public void updateSquares(ChessMove move) {      // need to add promotion piece functionality
+        ChessPosition start = move.getStartPosition();
+        ChessPosition end = move.getEndPosition();
+        ChessPiece piece = getPiece(start);
+        addPiece(end, piece);
+        addPiece(start, null);
+    }
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
@@ -97,5 +104,19 @@ public class ChessBoard {
     @Override
     public int hashCode() {     // needs to be more intense, I think
         return Arrays.deepHashCode(boardSquares);
+    }
+
+    @Override
+    protected ChessBoard clone() throws CloneNotSupportedException {        // do I need to clone all the pieces too? I'd assume so... right?
+        ChessBoard clonedBoard = new ChessBoard();
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition iteratePos = new ChessPosition(i,j);
+                ChessPiece iteratePiece = boardSquares[i][j];           // this needs to be a copy of the piece?
+                ChessPiece clonedPiece = iteratePiece.clone();
+                clonedBoard.addPiece(iteratePos, clonedPiece);
+            }
+        }
+        return clonedBoard;
     }
 }

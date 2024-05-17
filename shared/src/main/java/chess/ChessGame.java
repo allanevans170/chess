@@ -78,7 +78,16 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        if (board.getPiece(move.getStartPosition()).getTeamColor() == currTurn) {
+            throw new InvalidMoveException("It isn't" + currTurn.toString() + "'s turn");
+        }
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+        if (!validMoves.contains(move)) {
+            throw new InvalidMoveException("Invalid move");
+        } else {
+            board.updateSquares(move);
+            currTurn = (currTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;   // should I use setTeamTurn method?
+        }
         // if a move is valid, then apply it to the board, update board...
 
     }
