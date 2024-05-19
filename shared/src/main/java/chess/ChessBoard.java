@@ -74,6 +74,9 @@ public class ChessBoard implements Cloneable {
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
         ChessPiece piece = getPiece(start);
+        if (move.getPromotionPiece() != null) {
+            piece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());     // should I delete the old piece????????
+        }
         addPiece(end, piece);
         addPiece(start, null);
     }

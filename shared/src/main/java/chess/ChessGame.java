@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -51,13 +52,12 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        //throw new RuntimeException("Not implemented");
         Collection<ChessMove> moves = new ArrayList<>();
         ChessPiece currPiece = board.getPiece(startPosition);
+        Collection<ChessMove> validMoves = new ArrayList<>();
 
-        if (currPiece == null) {
-            return moves; // an empty collection;}
-        }
+        if (currPiece == null) { return validMoves; } // an empty collection;}}
+
         moves = currPiece.pieceMoves(board, startPosition);
 
         for (ChessMove move : moves) {  // clone the board
@@ -67,14 +67,13 @@ public class ChessGame {
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException("Cloning error :: validMoves");
             }
-
             possibleBoard.updateSquares(move); // update square on cloned board
 
-            if (isInCheck(currPiece.getTeamColor())) {  // is in check?
-                moves.remove(move);
+            if (!isInCheck(possibleBoard, currPiece.getTeamColor())) {  // is in check?
+                validMoves.add(move);
             } // if in check, remove move from list of moves
         }
-        return moves;
+        return validMoves;
         // needs to use isInCheck... (don't get circular)!!!
     }
 
@@ -88,12 +87,14 @@ public class ChessGame {
         if (board.getPiece(move.getStartPosition()) == null) {
             throw new InvalidMoveException("No piece at start position");
         }
-        if (board.getPiece(move.getStartPosition()).getTeamColor() == currTurn) {
+        if (board.getPiece(move.getStartPosition()).getTeamColor() != currTurn) {
             throw new InvalidMoveException("It isn't" + currTurn.toString() + "'s turn");
         }
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
         if (!validMoves.contains(move)) {
             throw new InvalidMoveException("Invalid move");
+        } else if (isInCheck(currTurn)) {
+            throw new InvalidMoveException("Can't move into check...");                      ///////// ???? needs to be solved in validMoves???
         } else {
             board.updateSquares(move);
             currTurn = (currTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;   // should I use setTeamTurn method?
@@ -110,7 +111,7 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
         return isInCheck(this.board, teamColor);
     }
-    public boolean isInCheck(ChessBoard anyBoard, TeamColor teamColor) {     // implements Cloneable
+    public boolean isInCheck(ChessBoard anyBoard, TeamColor teamColor) {     // overriden to accept "future" boards...
         ChessPosition kingLocation = anyBoard.getKingLocation(teamColor);
         TeamColor opposingTeam = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
         Collection<ChessPosition> opposingTeamLocations = anyBoard.teamLocations(opposingTeam, true);
@@ -140,22 +141,29 @@ public class ChessGame {
             return false;
         }
         ChessPosition kingLocation = board.getKingLocation(teamColor);
-        Collection<ChessMove> kingMoves = board.getPiece(kingLocation).pieceMoves(board, kingLocation);
-        TeamColor opposingTeam = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
+        Collection<ChessPosition> friendlyLocations = board.teamLocations(teamColor, true);
+        for (ChessPosition friendlyPieceLocation : friendlyLocations) {
+            possibleMoves = validMoves(friendlyPieceLocation);
+        }
+        //TeamColor opposingTeam = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
 
-        for (ChessMove kingMove : kingMoves) {
+        for (ChessMove move : possibleMoves) {
             ChessBoard possibleBoard;
             try {
                 possibleBoard = (ChessBoard) board.clone();
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException("Cloning error :: isInCheckmate");
             }
-            possibleBoard.updateSquares(kingMove);
+            possibleBoard.updateSquares(move);
             if (!isInCheck(possibleBoard, teamColor)) {
                 return false;
             }
         }
-        return true;
+        if (!isInStalemate(teamColor)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -166,7 +174,36 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor)) {
+            return false;
+        }
+        ChessPosition kingLocation = board.getKingLocation(teamColor);
+        Collection<ChessMove> kingMoves = validMoves(kingLocation);
+
+        TeamColor getOpposingTeam = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+        Collection<ChessPosition> opposingTeamLocations = board.teamLocations(getOpposingTeam, true); // enemy locations
+
+        for (ChessPosition enemyPosition : opposingTeamLocations) {             // for each enemy piece
+            if (kingMoves.isEmpty()) { break; }
+            Collection<ChessMove> enemyPiecesMoves = validMoves(enemyPosition);
+            for (ChessMove enemyPieceMove : enemyPiecesMoves) {                            // for each move by that enemy
+                Iterator<ChessMove> kingMoveIterator = kingMoves.iterator();
+                while (kingMoveIterator.hasNext()) {
+                    ChessMove kingMove = kingMoveIterator.next();
+                    if (enemyPieceMove.getEndPosition().equals(kingMove.getEndPosition())) {
+                        kingMoveIterator.remove();
+                        if (kingMoves.isEmpty()) { break; }
+                    }
+                }
+            }
+        }
+        Collection<ChessPosition> myTeamLocations = board.teamLocations(teamColor, false);
+        Collection<ChessMove> allFriendlyMoves = new ArrayList<>();
+        for (ChessPosition friendlyPositions : myTeamLocations) {
+            allFriendlyMoves.addAll(validMoves(friendlyPositions));
+        }
+        return kingMoves.isEmpty() && allFriendlyMoves.isEmpty();
+
     }
 
     /**
