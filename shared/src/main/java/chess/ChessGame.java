@@ -16,6 +16,7 @@ public class ChessGame {
     public ChessGame() {
         // why empty constructor???
         currTurn = TeamColor.WHITE;     // when object is constructed, default is that it is white's turn... right?
+        board.resetBoard();
     }
 
     /**
