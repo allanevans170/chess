@@ -95,7 +95,6 @@ public class ChessGame {
             currTurn = (currTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;   // should I use setTeamTurn method?
         }
         // if a move is valid, then apply it to the board, update board...
-
     }
 
     /**
@@ -104,15 +103,16 @@ public class ChessGame {
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    public boolean isInCheck(TeamColor teamColor) {     // implements Cloneable
-        //throw new RuntimeException("Not implemented");
-        ChessPosition kingLocation = board.getKingLocation(teamColor);
+    public boolean isInCheck(TeamColor teamColor) {
+        return isInCheck(this.board, teamColor);
+    }
+    public boolean isInCheck(ChessBoard anyBoard, TeamColor teamColor) {     // implements Cloneable
+        ChessPosition kingLocation = anyBoard.getKingLocation(teamColor);
         TeamColor opposingTeam = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
-        Collection<ChessPosition> opposingTeamLocations = board.teamLocations(opposingTeam, true);
+        Collection<ChessPosition> opposingTeamLocations = anyBoard.teamLocations(opposingTeam, true);
 
         for (ChessPosition position : opposingTeamLocations) {
-            // call pieceMoves instead of validMoves...
-            Collection<ChessMove> moves = validMoves(position);
+            Collection<ChessMove> moves = anyBoard.getPiece(position).pieceMoves(anyBoard, position); // call pieceMoves instead of validMoves...
             for (ChessMove move : moves) {
                 if (move.getEndPosition().equals(kingLocation)) {
                     return true;
@@ -132,7 +132,26 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (!isInCheck(teamColor)) {
+            return false;
+        }
+        ChessPosition kingLocation = board.getKingLocation(teamColor);
+        Collection<ChessMove> kingMoves = board.getPiece(kingLocation).pieceMoves(board, kingLocation);
+        TeamColor opposingTeam = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+
+        for (ChessMove kingMove : kingMoves) {
+            ChessBoard possibleBoard;
+            try {
+                possibleBoard = (ChessBoard) board.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException("Cloning error :: isInCheckmate");
+            }
+            possibleBoard.updateSquares(kingMove);
+            if (!isInCheck(possibleBoard, teamColor)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
