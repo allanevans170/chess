@@ -85,6 +85,9 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if (board.getPiece(move.getStartPosition()) == null) {
+            throw new InvalidMoveException("No piece at start position");
+        }
         if (board.getPiece(move.getStartPosition()).getTeamColor() == currTurn) {
             throw new InvalidMoveException("It isn't" + currTurn.toString() + "'s turn");
         }
