@@ -51,21 +51,27 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         //throw new RuntimeException("Not implemented");
-        Collection<ChessMove> moves;
+        Collection<ChessMove> moves = new ArrayList<>();
         ChessPiece currPiece = board.getPiece(startPosition);
 
         if (currPiece == null) {
-            return null;
-        } else {
-            moves = currPiece.pieceMoves(board, startPosition);
+            return moves; // an empty collection;}
         }
+        moves = currPiece.pieceMoves(board, startPosition);
 
-        for (ChessMove move : moves) {
-            // clone the board
-            // update square on cloned board
+        for (ChessMove move : moves) {  // clone the board
+            ChessBoard possibleBoard;
+            try {
+                possibleBoard = (ChessBoard) board.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException("Cloning error :: validMoves");
+            }
 
-            // is in check?
-            // if in check, remove move from list of moves
+            possibleBoard.updateSquares(move); // update square on cloned board
+
+            if (isInCheck(currPiece.getTeamColor())) {  // is in check?
+                moves.remove(move);
+            } // if in check, remove move from list of moves
         }
         return moves;
         // needs to use isInCheck... (don't get circular)!!!
@@ -99,10 +105,23 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {     // implements Cloneable
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        ChessPosition kingLocation = board.getKingLocation(teamColor);
+        TeamColor opposingTeam = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+        Collection<ChessPosition> opposingTeamLocations = board.teamLocations(opposingTeam, true);
+
+        for (ChessPosition position : opposingTeamLocations) {
+            // call pieceMoves instead of validMoves...
+            Collection<ChessMove> moves = validMoves(position);
+            for (ChessMove move : moves) {
+                if (move.getEndPosition().equals(kingLocation)) {
+                    return true;
+                }
+            }
+        }
+        return false;
         // make the move... are you still in the check? end position of opposite team on your king's spot
         // check all
-        //
         // clone your board fore every move, throw away the clone
     }
 

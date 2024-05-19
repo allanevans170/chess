@@ -95,7 +95,7 @@ public class ChessPiece implements Cloneable {       // implements Cloneable
 
     @Override
     protected ChessPiece clone() throws CloneNotSupportedException {
-        ChessPiece clonedPiece = new ChessPiece(this.pieceColor, this.type);
+        ChessPiece clonedPiece = (ChessPiece) super.clone();  // new ChessPiece(this.pieceColor, this.type);
         return clonedPiece;
     }
 }

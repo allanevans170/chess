@@ -36,6 +36,22 @@ public class ChessBoard implements Cloneable {
         return boardSquares[position.getRow()][position.getColumn()];
     }
 
+    // KING LOCATOR...
+    public ChessPosition getKingLocation(ChessGame.TeamColor team) {
+        ChessPosition kingPosition;
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                if (boardSquares[i][j] != null
+                        && boardSquares[i][j].getTeamColor() == team
+                        && boardSquares[i][j].getPieceType() == ChessPiece.PieceType.KING) {
+                    kingPosition = new ChessPosition(i, j);
+                    return kingPosition;
+                }
+            }
+        }
+        return null;
+    }
+
     public void updateSquares(ChessMove move) {      // need to add promotion piece functionality
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
@@ -107,14 +123,17 @@ public class ChessBoard implements Cloneable {
     }
 
     @Override
-    protected ChessBoard clone() throws CloneNotSupportedException {        // do I need to clone all the pieces too? I'd assume so... right?
+    public ChessBoard clone() throws CloneNotSupportedException {        // do I need to clone all the pieces too? I'd assume so... right?
         ChessBoard clonedBoard = new ChessBoard();
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
-                ChessPosition iteratePos = new ChessPosition(i,j);
-                ChessPiece iteratePiece = boardSquares[i][j];           // this needs to be a copy of the piece?
-                ChessPiece clonedPiece = iteratePiece.clone();
-                clonedBoard.addPiece(iteratePos, clonedPiece);
+                //ChessPosition iteratePos = new ChessPosition(i,j);
+                ChessPiece piece = boardSquares[i][j];           // this needs to be a copy of the piece?
+                //ChessPiece clonedPiece = iteratePiece.clone();
+                //clonedBoard.addPiece(iteratePos, clonedPiece);
+                if (piece != null) {
+                    clonedBoard.boardSquares[i][j] = piece.clone();
+                }
             }
         }
         return clonedBoard;
