@@ -52,7 +52,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        Collection<ChessMove> moves = new ArrayList<>();
+        Collection<ChessMove> moves;
         ChessPiece currPiece = board.getPiece(startPosition);
         Collection<ChessMove> validMoves = new ArrayList<>();
 
@@ -140,11 +140,11 @@ public class ChessGame {
         if (!isInCheck(teamColor)) {
             return false;
         }
-        ChessPosition kingLocation = board.getKingLocation(teamColor);
+        //ChessPosition kingLocation = board.getKingLocation(teamColor);
         Collection<ChessMove> possibleMoves = new ArrayList<>();
         Collection<ChessPosition> friendlyLocations = board.teamLocations(teamColor, true);
         for (ChessPosition friendlyPieceLocation : friendlyLocations) {
-            possibleMoves = validMoves(friendlyPieceLocation);
+            possibleMoves.addAll(validMoves(friendlyPieceLocation));
         }
         //TeamColor opposingTeam = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
 
