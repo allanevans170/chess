@@ -15,10 +15,10 @@ public class MemoryUserDAO implements UserDAO {
     return user;
   }
 
-  @Override
+  /*@Override
   public Collection<UserData> listUsers() throws DataAccessException {
     return users.values();
-  }
+  }*/
 
   @Override
   public UserData getUser(String username) throws DataAccessException {
