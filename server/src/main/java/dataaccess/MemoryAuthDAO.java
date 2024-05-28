@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class MemoryAuthDAO implements AuthDAO {
 
-  final private HashMap<String, AuthData> auths = new HashMap<>();   // advantage to hashmap?????
+  final private HashMap<String, AuthData> auths = new HashMap<>();
   @Override
   public void createAuth(String username) throws DataAccessException {
     AuthData auth = new AuthData(username);
