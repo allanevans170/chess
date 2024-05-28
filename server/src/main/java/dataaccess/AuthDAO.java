@@ -1,5 +1,7 @@
 package dataaccess;
 
+import model.AuthData;
+import java.util.Collection;
 public interface AuthDAO {
   void createAuth(String username) throws DataAccessException;
 
