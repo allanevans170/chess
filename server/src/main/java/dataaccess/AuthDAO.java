@@ -7,7 +7,7 @@ public interface AuthDAO {
 
   Collection<AuthData> listAuths() throws DataAccessException;    /////////>>>>>>>>>>>>>???????????
 
-  AuthData getAuth(String username) throws DataAccessException;
+  AuthData getAuth(String authToken) throws DataAccessException;
 
   void deleteAuth(String authToken) throws DataAccessException;  //
 
