@@ -27,6 +27,7 @@ public class UserService {
     } catch (DataAccessException e) {
       throw new ServiceException("Error creating auth token while registering user");
     }
+
   }
   public AuthData login(UserData user) throws ServiceException {
     try {
