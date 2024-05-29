@@ -1,19 +1,18 @@
 package server;
 
 import dataaccess.DataAccessException;
+
 import service.ClearService;
+import service.GameService;
+import service.UserService;
 import spark.*;
 
 public class Server {
-    private final service.ClearService ClearService;
-    private final service.GameService GameService;
-    private final service.UserService UserService;
+    private final ClearService clearService = new ClearService();
+    private final GameService gameService = new GameService();
+    private final UserService userService = new UserService();
 
-    public Server(service.ClearService clearService, service.GameService gameService, service.UserService userService) {
-        this.ClearService = clearService;
-        this.GameService = gameService;
-        this.UserService = userService;
-    }
+    public Server() { }
 
     public static void main(String[] args) {
         new Server().run(8080);
