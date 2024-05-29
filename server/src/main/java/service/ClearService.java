@@ -14,7 +14,7 @@ public class ClearService {
     this.gameDAO = gameDAO;
   }
 
-  public void clearService() {
+  public void clearDatabase() {
     authDAO.deleteAllAuths();
     userDAO.deleteAllUsers();
     gameDAO.deleteAllGames();
