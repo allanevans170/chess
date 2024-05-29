@@ -7,7 +7,6 @@ import model.UserData;
 import dataaccess.UserDAO;
 
 public class UserService {
-
   private final UserDAO userDAO;
   private final AuthDAO authDAO;
 
@@ -18,23 +17,22 @@ public class UserService {
 
   public AuthData register(UserData user) throws ServiceException {   // where should I be handling the exceptions???
     try {
-      userDAO.createUser(user.username(), user.password(), user.email());
-    } catch (DataAccessException e) {
-      throw new ServiceException("User already exists");
-    }
-    try {
+      if (userDAO.getUser(user.username()) != null) {
+        throw new ServiceException("User already exists");
+      }
       authDAO.createAuth(user.username());
+      return authDAO.getAuth(user.username());
     } catch (DataAccessException e) {
-      throw new ServiceException("Error creating auth token while registering user");
+      throw new ServiceException("Error registering user");
     }
-
   }
   public AuthData login(UserData user) throws ServiceException {
     try {
-      return authDAO.getAuth(userDAO.getUser(user.username()).username());
+      authDAO.getAuth(userDAO.getUser(user.username()).username());
     } catch (DataAccessException e) {
-      throw new ServiceException("User does not exist");
+      throw new ServiceException("User already exist");
     }
+
   }
   public void logout(UserData user) throws ServiceException {
     try {
