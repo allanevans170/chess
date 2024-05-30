@@ -20,7 +20,7 @@ public class MemoryAuthDAO implements AuthDAO {
   }
 
   @Override
-  public Collection<AuthData> listAuths() {
+  public Collection<AuthData> listAuths() throws DataAccessException {
     return auths.values();
   }
 
@@ -43,7 +43,7 @@ public class MemoryAuthDAO implements AuthDAO {
   }
 
   @Override
-  public void deleteAllAuths() {
+  public void deleteAllAuths() throws DataAccessException {
     auths.clear();
   }
 }

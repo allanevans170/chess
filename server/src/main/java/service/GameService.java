@@ -20,20 +20,23 @@ public class GameService {
   public int createGame(String gameName, String authToken) throws ServiceException {
     int currentID = nextID;
     nextID++;
-    try {
-      authDAO.getAuth(authToken);
-    } catch (ServiceException e) {
-      throw new ServiceException("Invalid Auth Token");
-    }
+//    try {
+//      authDAO.getAuth(authToken);
+//    } catch (ServiceException e) {
+//      throw new ServiceException("Invalid Auth Token");
+//    }
+    authDAO.getAuth(authToken);
     return currentID;
   }
-  public GameData joinGame(int gameID) {
-    //return gameDAO.getGame(gameID);
+  public GameData joinGame(int gameID) throws ServiceException {
+    return gameDAO.getGame(gameID);
   }
-  public Collection<GameData> listGames() {
+  public Collection<GameData> listGames() throws ServiceException {
     return gameDAO.listGames();
   }
-  // public void updateGame(GameData game) {}
 
+  public void updateGame(GameData game) throws ServiceException {
+    gameDAO.updateGame(game);
+  }
 
 }

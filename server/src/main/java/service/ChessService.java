@@ -12,18 +12,34 @@ public class ChessService {
   private final UserDAO userDAO;
   private final GameDAO gameDAO;
 
+  private final UserService userService;
+  private final GameService gameService;
+
+
   public ChessService(UserDAO userDAO, AuthDAO authDAO, GameDAO gameDAO) {
     this.userDAO = userDAO;
     this.authDAO = authDAO;
     this.gameDAO = gameDAO;
 
-    UserService userService = new UserService(userDAO, authDAO);
-    GameService gameService = new GameService(gameDAO, authDAO);
+    userService = new UserService(userDAO, authDAO);
+    gameService = new GameService(gameDAO, authDAO);
   }
 
-  public void clear() { // UserData user, AuthData auth, GameData game
-    authDAO.deleteAllAuths();
-    userDAO.deleteAllUsers();
-    gameDAO.deleteAllGames();
+  public UserService getUserService() {
+    return userService;
+  }
+
+  public GameService getGameService() {
+    return gameService;
+  }
+
+  public void clear() throws ServiceException { // UserData user, AuthData auth, GameData game
+    try {
+      authDAO.deleteAllAuths();
+      userDAO.deleteAllUsers();
+      gameDAO.deleteAllGames();
+    } catch (Exception e) {
+      throw new ServiceException("Error clearing data");
+    }
   }
 }
