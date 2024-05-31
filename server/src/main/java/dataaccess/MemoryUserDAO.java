@@ -11,7 +11,7 @@ public class MemoryUserDAO implements UserDAO {
   @Override
   public void createUser(String username, String password, String email) throws DataAccessException {
     if (users.containsKey(username)) {
-      throw new DataAccessException("User already exists");
+      throw new DataAccessException("already taken");
     }
     UserData user = new UserData(username, password, email);
     users.put(username, user);
@@ -24,9 +24,9 @@ public class MemoryUserDAO implements UserDAO {
 
   @Override
   public UserData getUser(String username) throws DataAccessException {
-    if (users.containsKey(username) == false) {
-      throw new DataAccessException("User does not exist");
-    }
+//    if (users.containsKey(username) == false) {
+//      throw new DataAccessException("User does not exist");
+//    }
     return users.get(username);
   }
 

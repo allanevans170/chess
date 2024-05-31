@@ -69,4 +69,18 @@ public class UserServiceTest {
       System.out.println("caught an exception in the positiveRegisterTest");
     }
   }
+
+  @Test
+  public void negativeLogin() {
+    try {
+      userService.register(new UserData("hikaru", "password", "email@gmail.com"));
+      userService.register(new UserData("gotham", "youtuber", "gotham@yahoo.com"));
+
+      userService.login(new UserData("hiKaru", "password", ""));
+      fail("Should have thrown an exception");
+
+    } catch (ServiceException e) {
+      assertEquals("Error: unauthorized", e.getMessage());
+    }
+  }
 }

@@ -15,33 +15,26 @@ public class UserService {
     this.authDAO = authDAO;
   }
 
-  public AuthData register(UserData user) throws ServiceException {   // success response: 200??
+  public AuthData register(UserData user) throws ServiceException {   // needs a success 200 and bad request 400
     try {
-      if (userDAO.listUsers().size() != 0 && userDAO.getUser(user.username()) != null) {
-        throw new ServiceException(403, "Error: already taken");
-      }
       userDAO.createUser(user.username(), user.password(), user.email());
-      authDAO.createAuth(user.username());
-
-      return authDAO.getAuth(user.username());
+      return authDAO.createAuth(user.username());
     }
     catch (DataAccessException e) {
-      throw new ServiceException(500, "Error: ");
+      throw new ServiceException(500, "Error: " + e.getMessage());
     }
   }
 
-  public AuthData login(UserData user) throws ServiceException {   // data access vs service exceptions ????????????????????????
+  public AuthData login(UserData user) throws ServiceException {   // success 200
     try {
       if (userDAO.getUser(user.username()) == null) {
         throw new ServiceException(401, "Error: unauthorized");
       }
-      // need to verify passwrod here?
-      authDAO.createAuth(user.username());
-      return authDAO.getAuth(user.username());
+      // need to verify password here?!?!?!?!?!?!?!?!
+      return authDAO.createAuth(user.username());
     } catch (DataAccessException e) {
-      throw new ServiceException(500, "Error: description..."); // include message from data access exception??
+      throw new ServiceException(500, "Error: "+ e.getMessage()); // include message from data access exception??
     }
-
   }
 
   public void logout(UserData user) throws ServiceException {

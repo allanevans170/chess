@@ -3,7 +3,7 @@ package dataaccess;
 import model.AuthData;
 import java.util.Collection;
 public interface AuthDAO {
-  void createAuth(String username) throws DataAccessException;
+  AuthData createAuth(String username) throws DataAccessException;
 
   Collection<AuthData> listAuths() throws DataAccessException;
 
