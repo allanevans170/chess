@@ -54,21 +54,21 @@ public class GameServiceTests {
 
   @Test
   public void positiveJoinGame() {
-
+    fail ("Not implemented");
   }
 
   @Test
   public void negativeJoinGame() {
-
+    fail ("Not implemented");
   }
 
   @Test
   public void positiveListGames() {
-
+    fail ("Not implemented");
   }
 
   @Test
   public void negativeListGames() {
-
+    fail ("Not implemented");
   }
 }

@@ -30,7 +30,7 @@ public class MemoryGameDAO implements GameDAO {
   }
 
   @Override
-  public Collection<GameData> listGames() {   // I don't think i need a DataAccessException here
+  public Collection<GameData> listGames() throws DataAccessException {
     return games.values();
   }
 
@@ -40,7 +40,7 @@ public class MemoryGameDAO implements GameDAO {
   }
 
   @Override
-  public void deleteAllGames() {      // I don't think I need a DataAccessException here
+  public void deleteAllGames() throws DataAccessException {      // I don't think I need a DataAccessException here
     games.clear();
   }
 }

@@ -17,6 +17,12 @@ public class UserService {
 
   public AuthData register(UserData user) throws ServiceException {   // needs a success 200 and bad request 400
     try {
+      if (user.username() == "" || user.password() == "" || user.email() == "") {
+        throw new ServiceException(400, "Error: bad request");
+      }
+      if (userDAO.getUser(user.username()) != null) {
+        throw new ServiceException(403, "Error: already taken");
+      }
       userDAO.createUser(user.username(), user.password(), user.email());
       return authDAO.createAuth(user.username());
     }
@@ -27,13 +33,15 @@ public class UserService {
 
   public AuthData login(UserData user) throws ServiceException {   // success 200
     try {
-      if (userDAO.getUser(user.username()) == null) {
+      if (userDAO.getUser(user.username()) == null) {           // username not in database
         throw new ServiceException(401, "Error: unauthorized");
       }
-      // need to verify password here?!?!?!?!?!?!?!?!
+      if (user.password() != userDAO.getUser(user.username()).password()) {   // password verification
+        throw new ServiceException(401, "Error: unauthorized");
+      }
       return authDAO.createAuth(user.username());
     } catch (DataAccessException e) {
-      throw new ServiceException(500, "Error: "+ e.getMessage()); // include message from data access exception??
+      throw new ServiceException(500, "Error: "+ e.getMessage());
     }
   }
 
