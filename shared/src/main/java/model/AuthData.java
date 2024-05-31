@@ -10,8 +10,8 @@ public record AuthData(String username, String authToken) {
 
   public String toString() {
     return "AuthData{" +
-            "authToken='" + authToken + '\'' +
-            ", username='" + username + '\'' +
+            "username='" + username + '\'' +
+            ", authToken='" + authToken + '\'' +
             '}';
   }
 }

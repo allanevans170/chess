@@ -17,7 +17,7 @@ public class UserService {
 
   public AuthData register(UserData user) throws ServiceException {   // success response: 200??
     try {
-      if (userDAO.getUser(user.username()) != null) {
+      if (userDAO.listUsers().size() != 0 && userDAO.getUser(user.username()) != null) {
         throw new ServiceException(403, "Error: already taken");
       }
       userDAO.createUser(user.username(), user.password(), user.email());

@@ -1,12 +1,7 @@
 package service;
 
-import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
-import dataaccess.UserDAO;
-import dataaccess.GameDAO;
-import model.AuthData;
-import model.GameData;
-import model.UserData;
+import dataaccess.*;
+import model.*;
 
 public class ChessService {
   private final AuthDAO authDAO;
