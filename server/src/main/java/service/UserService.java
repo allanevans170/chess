@@ -37,12 +37,12 @@ public class UserService {
     }
   }
 
-  public void logout(UserData user) throws ServiceException {
+  public void logout(AuthData auth) throws ServiceException {
     try {
-      if (authDAO.getAuth(user.username()) == null) {
+      if (authDAO.getAuth(auth.authToken()) == null) {
         throw new ServiceException(401, "Error: unauthorized");
       }
-      authDAO.deleteAuth(user.username());
+      authDAO.deleteAuth(auth.authToken());
     } catch (DataAccessException e) {
       throw new ServiceException(500, "Error: description...");
     }

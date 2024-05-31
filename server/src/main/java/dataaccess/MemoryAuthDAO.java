@@ -29,22 +29,12 @@ public class MemoryAuthDAO implements AuthDAO {
   }
 
   @Override
-  public AuthData getAuth(String authToken) throws DataAccessException { // authToken?? or username??
-//    try {
-//
-//    } catch (Exception e) {
-//      throw new DataAccessException("Auth not found");
-//    }
+  public AuthData getAuth(String authToken) throws DataAccessException {
     return auths.get(authToken);
   }
 
   @Override
   public void deleteAuth(String authToken) throws DataAccessException {
-//    try {
-//      auths.remove(authToken);
-//    } catch (Exception e) {
-//      throw new DataAccessException("Auth not deleted");
-//    }
     auths.remove(authToken);
   }
 
