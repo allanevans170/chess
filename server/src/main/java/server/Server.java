@@ -100,8 +100,8 @@ public class Server {
     }
     private Object LogoutHandler(Request req, Response res) {
         try {
-            var user = new Gson().fromJson(req.body(), UserData.class);
-            chessService.getUserService().logout(user);
+            AuthData auth = new Gson().fromJson(req.body(), AuthData.class);
+            chessService.getUserService().logout(auth);
             res.status(204);
         } catch (Exception e) {
             // failure response???

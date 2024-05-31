@@ -15,13 +15,6 @@ public class UserServiceTest {
     memoryAuthDAO = new MemoryAuthDAO();
     memoryUserDAO = new MemoryUserDAO();
     userService = new UserService(memoryUserDAO, memoryAuthDAO);
-
-//    try {
-//      memoryAuthDAO.createAuth("yoloChessboi69");
-//      memoryUserDAO.createUser("hikaru","magnus_stinks","hikaru@chess.com");
-//    } catch (Exception e) {
-//      System.out.println("Exception caught in UserServiceTest setup");
-//    }
   }
   @Test
   public void positiveRegister() {
@@ -32,7 +25,7 @@ public class UserServiceTest {
       assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
 
     } catch (Exception e) {
-      System.out.println("caught an exception in the positiveRegisterTest");
+      System.out.println("error: "+e.getMessage());
     }
   }
   @Test
@@ -50,7 +43,7 @@ public class UserServiceTest {
       assertEquals(1, memoryAuthDAO.listAuths().size(), "AuthDAO should have 1 auth");
       assertEquals(1, memoryUserDAO.listUsers().size(), "UserDAO should have 1 auth");
     } catch (DataAccessException e) {
-      System.out.println("caught an exception in the negativeRegisterTest");
+      System.out.println("error: "+e.getMessage());
     }
   }
 
@@ -66,7 +59,7 @@ public class UserServiceTest {
       assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
 
     } catch (Exception e) {
-      System.out.println("caught an exception in the positiveRegisterTest");
+      System.out.println("error: "+e.getMessage());
     }
   }
 
@@ -81,6 +74,38 @@ public class UserServiceTest {
 
     } catch (ServiceException e) {
       assertEquals("Error: unauthorized", e.getMessage());
+    }
+  }
+
+  @Test
+  public void positiveLogout() {
+    try {
+      AuthData auth1 = userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
+      AuthData auth2 = userService.login(new UserData("gotham","youtuber",""));
+
+      assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auths");
+      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
+
+      userService.logout(auth1);
+      assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auths");
+      userService.logout(auth2);
+      assertEquals(0, memoryAuthDAO.listAuths().size(),"AuthDAO should have 0 auths");
+      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
+
+    } catch (Exception e) {
+      System.out.println("error: "+e.getMessage());
+    }
+  }
+
+  @Test
+  public void negativeLogout() {
+    try {
+      AuthData auth1 = new AuthData("hikaru");
+      userService.logout(auth1);
+      fail("Should have thrown an exception");
+
+    } catch (Exception e) {
+      System.out.println("error: "+e.getMessage());
     }
   }
 }
