@@ -18,7 +18,7 @@ public class UserServiceTest {
 
 //    try {
 //      memoryAuthDAO.createAuth("yoloChessboi69");
-//      memoryUserDAO.createUser("hikaruStickaru","magnus_stinks","hikaru@chess.com");
+//      memoryUserDAO.createUser("hikaru","magnus_stinks","hikaru@chess.com");
 //    } catch (Exception e) {
 //      System.out.println("Exception caught in UserServiceTest setup");
 //    }
@@ -26,7 +26,7 @@ public class UserServiceTest {
   @Test
   public void positiveRegister() {
     try {
-      userService.register(new UserData("hikaruStickaru","magnus_stinks","hikaru@chess.com"));
+      userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
 
       assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
       assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
@@ -38,8 +38,8 @@ public class UserServiceTest {
   @Test
   public void negativeRegister() {
     try {
-      userService.register(new UserData("hikaruStickaru","password","email@gmail.com"));
-      userService.register(new UserData("hikaruStickaru","magnus_stinks","hikaru@chess.com"));
+      userService.register(new UserData("hikaru","password","email@gmail.com"));
+      userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
       fail("Should have thrown an exception");
 
     } catch (ServiceException e) {
@@ -57,10 +57,13 @@ public class UserServiceTest {
   @Test
   public void positiveLogin() {
     try {
-      userService.login(new UserData("hikaruStickaru","magnus_stinks"));
-
+      userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
       assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
       assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
+
+      userService.login(new UserData("hikaru","magnus_stinks", ""));
+      assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auth");
+      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
 
     } catch (Exception e) {
       System.out.println("caught an exception in the positiveRegisterTest");

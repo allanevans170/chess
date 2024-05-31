@@ -18,7 +18,7 @@ public class MemoryAuthDAO implements AuthDAO {
 //      throw new DataAccessException("Error creating auth");
 //    }
     AuthData auth = new AuthData(username);
-    auths.put(auth.username(), auth);
+    auths.put(auth.authToken(), auth);
   }
 
 
@@ -28,13 +28,13 @@ public class MemoryAuthDAO implements AuthDAO {
   }
 
   @Override
-  public AuthData getAuth(String username) throws DataAccessException { // authToken?? or username??
+  public AuthData getAuth(String authToken) throws DataAccessException { // authToken?? or username??
 //    try {
 //
 //    } catch (Exception e) {
 //      throw new DataAccessException("Auth not found");
 //    }
-    return auths.get(username);
+    return auths.get(authToken);
   }
 
   @Override
