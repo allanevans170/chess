@@ -1,9 +1,7 @@
 package service;
 
-import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
-import model.GameData;
-import dataaccess.GameDAO;
+import dataaccess.*;
+import model.*;
 
 import java.util.Collection;
 
@@ -18,17 +16,18 @@ public class GameService {
     this.authDAO = authDAO;
   }
 
-  public int createGame(String gameName) throws ServiceException {    // username???
-//    try {
-//      int currentID = nextID;
-//      nextID++;
-//
-//      authDAO.getAuth(username);
-//      return currentID;
-//    } catch (DataAccessException e) {
-//      throw new ServiceException(500, "Error: description...");
-//    }
-    return 0;
+  public int createGame(AuthData auth, String gameName) throws ServiceException {    // username???
+    try {
+      int currentID = nextID;
+      nextID++;
+      if (authDAO.getAuth(auth.authToken()) == null) {
+        throw new ServiceException(401, "Error: unauthorized");
+      }
+      gameDAO.createGame(currentID, gameName);
+      return currentID;
+    } catch (DataAccessException e) {
+      throw new ServiceException(500, "Error: "+e.getMessage());
+    }
   }
   public GameData joinGame(int gameID) throws ServiceException {
 //    try {

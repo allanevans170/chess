@@ -35,7 +35,7 @@ public class ChessService {
       userDAO.deleteAllUsers();
       gameDAO.deleteAllGames();
     } catch (DataAccessException e) {
-      throw new ServiceException(500, "Error: ");
+      throw new ServiceException(500, "Error: "+ e.getMessage());
     }
   }
 }
