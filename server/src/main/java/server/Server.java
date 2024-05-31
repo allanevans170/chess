@@ -29,7 +29,7 @@ public class Server {
         new Server().run(8080);
     }
 
-    public Server run(int desiredPort) {
+    public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
@@ -46,7 +46,7 @@ public class Server {
         Spark.delete("/db", this::clearDatabase);
 
         Spark.awaitInitialization();
-        return this;
+        return Spark.port();
     }
     public int port() {
         return Spark.port();

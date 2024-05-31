@@ -12,13 +12,13 @@ public class Main {
 
 
         try {
-            var port = 8080;
+            int port = 8080;
             if (args.length >= 1) {
                 port = Integer.parseInt(args[0]);
             }
 
             //var service = new ChessService(new MemoryUserDAO(), new MemoryAuthDAO(), new MemoryGameDAO());
-            var server = new Server().run(port);
+            Server server = new Server();
             port = server.port();
             System.out.println("Server running on port " + port);
             return;

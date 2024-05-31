@@ -39,7 +39,7 @@ public class ChessService {
       authDAO.deleteAllAuths();
       userDAO.deleteAllUsers();
       gameDAO.deleteAllGames();
-    } catch (Exception e) {
+    } catch (DataAccessException e) {
       throw new ServiceException(500, "Error: ");
     }
   }
