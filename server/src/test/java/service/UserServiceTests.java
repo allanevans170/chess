@@ -81,7 +81,7 @@ public class UserServiceTests {
   public void positiveLogout() {
     try {
       AuthData auth1 = userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
-      AuthData auth2 = userService.login(new UserData("gotham","youtuber",""));
+      AuthData auth2 = userService.login(new UserData("hikaru","magnus_stinks",""));
 
       assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auths");
       assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");

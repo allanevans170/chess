@@ -37,8 +37,19 @@ public class GameServiceTests {
   }
 
   @Test
-  public void negativeCreateGame() {
+  public void negativeCreateGame() {    // User not registered
+    try {
+      AuthData auth = chessService.getUserService().register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
 
+      assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
+      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
+
+      int gameID = chessService.getGameService().createGame(new AuthData("bill", "x"), "magnusVsHikaru");
+      fail("Should have thrown an exception");
+
+    } catch (Exception e) {
+      assertEquals("Error: unauthorized", e.getMessage());
+    }
   }
 
   @Test

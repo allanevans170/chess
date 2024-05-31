@@ -1,5 +1,6 @@
 package service;
 
+//import chess.ChessGame;
 import dataaccess.*;
 import model.*;
 
@@ -29,12 +30,18 @@ public class GameService {
       throw new ServiceException(500, "Error: "+e.getMessage());
     }
   }
-  public GameData joinGame(int gameID) throws ServiceException {
-//    try {
-//      return gameDAO.getGame(gameID);
-//    } catch (DataAccessException e) {
-//      throw new ServiceException(500, "Error: description...");
-//    }
+  public GameData joinGame(AuthData auth, String playerColor, int gameID) throws ServiceException {
+    try {
+      if (authDAO.getAuth(auth.authToken()) == null) {
+        throw new ServiceException(401, "Error: unauthorized");
+      }
+      AuthData authenticated = authDAO.getAuth(auth.authToken());
+
+      gameDAO.getGame(gameID);
+    } catch (DataAccessException e) {
+      throw new ServiceException(500, "Error: "+e.getMessage());
+    }
+
     return null;
   }
   public Collection<GameData> listGames() throws ServiceException {
