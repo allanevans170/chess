@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.AuthDAO;
+import dataaccess.DataAccessException;
 import model.GameData;
 import dataaccess.GameDAO;
 
@@ -17,26 +18,40 @@ public class GameService {
     this.authDAO = authDAO;
   }
 
-  public int createGame(String gameName, String authToken) throws ServiceException {
-    int currentID = nextID;
-    nextID++;
+  public int createGame(String gameName) throws ServiceException {    // username???
 //    try {
-//      authDAO.getAuth(authToken);
-//    } catch (ServiceException e) {
-//      throw new ServiceException("Invalid Auth Token");
+//      int currentID = nextID;
+//      nextID++;
+//
+//      authDAO.getAuth(username);
+//      return currentID;
+//    } catch (DataAccessException e) {
+//      throw new ServiceException(500, "Error: description...");
 //    }
-    authDAO.getAuth(authToken);
-    return currentID;
+    return 0;
   }
   public GameData joinGame(int gameID) throws ServiceException {
-    return gameDAO.getGame(gameID);
+//    try {
+//      return gameDAO.getGame(gameID);
+//    } catch (DataAccessException e) {
+//      throw new ServiceException(500, "Error: description...");
+//    }
+    return null;
   }
   public Collection<GameData> listGames() throws ServiceException {
-    return gameDAO.listGames();
+//    try {
+//      return gameDAO.listGames();
+//    } catch (DataAccessException e) {
+//      throw new ServiceException(500, "error: description...");
+//    }
+    return null;
   }
-
-  public void updateGame(GameData game) throws ServiceException {
-    gameDAO.updateGame(game);
-  }
+//
+//  public void updateGame(GameData game) throws ServiceException {
+//    try {
+//      gameDAO.updateGame(game);
+//    }
+//    gameDAO.updateGame(game);
+//  }
 
 }

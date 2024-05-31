@@ -9,8 +9,11 @@ import com.google.gson.Gson;
 
 import service.ChessService;
 import service.GameService;
+import service.ServiceException;
 import service.UserService;
 import spark.*;
+
+import java.util.Collection;
 
 public class Server {
     private final ChessService chessService = new ChessService(new MemoryUserDAO(), new MemoryAuthDAO(), new MemoryGameDAO());
@@ -58,40 +61,62 @@ public class Server {
 //        res.status(ex.StatusCode());
 //    }
 
-    private Object RegisterHandler(Request req, Response res) throws DataAccessException {
-        var user = new Gson().fromJson(req.body(), UserData.class);
-        //try {
-        var auth = chessService.getUserService().register(user);
-        return new Gson().toJson(auth);
+    private Object RegisterHandler(Request req, Response res) {         // I need try catch blocks happening here and now!!
+        UserData user = new Gson().fromJson(req.body(), UserData.class);
+        try {
+            var auth=chessService.getUserService().register(user);
+            return new Gson().toJson(auth);
+        } catch (ServiceException e) {
+            // failure response...
+        }
+        return "fail";
     }
-    private Object LoginHandler(Request req, Response res) throws DataAccessException {
-        var user = new Gson().fromJson(req.body(), UserData.class);
-        var auth = chessService.getUserService().login(user);
-        return new Gson().toJson(auth);
+    private Object LoginHandler(Request req, Response res) {
+        try {
+            UserData user = new Gson().fromJson(req.body(), UserData.class);
+            AuthData auth = chessService.getUserService().login(user);
+            return new Gson().toJson(auth);
+        } catch (ServiceException e) {
+            // failur response
+        }
+        return "fail";
     }
-    private Object ListGamesHandler(Request req, Response res) throws DataAccessException {
-        var games = chessService.getGameService().listGames();  // returns a collection of objects???
-        return new Gson().toJson(games);
+    private Object ListGamesHandler(Request req, Response res) {
+        //Collection<GameData> games = chessService.getGameService().listGames();  // returns a collection of objects???
+        //return new Gson().toJson(games);
+        return null;
     }
-    private Object CreateGameHandler(Request req, Response res) throws DataAccessException {
-        var game = new Gson().fromJson(req.body(), GameData.class);
-        var newGame = chessService.getGameService().createGame(game);
-        return new Gson().toJson(newGame);
+    private Object CreateGameHandler(Request req, Response res) {
+//        var game = new Gson().fromJson(req.body(), GameData.class);
+//        var newGame = chessService.getGameService().createGame(game);
+//        return new Gson().toJson(newGame);
+        return null;
     }
-    private Object JoinGameHandler(Request req, Response res) throws DataAccessException {
-        var game = new Gson().fromJson(req.body(), GameData.class);
-        var joinedGame = chessService.getGameService().joinGame(game);
-        return new Gson().toJson(joinedGame);
+    private Object JoinGameHandler(Request req, Response res) {
+//        var game = new Gson().fromJson(req.body(), GameData.class);
+//        var joinedGame = chessService.getGameService().joinGame(game);
+//        return new Gson().toJson(joinedGame);
+        return null;
     }
-    private Object LogoutHandler(Request req, Response res) throws DataAccessException {
-        var user = new Gson().fromJson(req.body(), UserData.class);
-        chessService.getUserService().logout(user);
-        res.status(204);
+    private Object LogoutHandler(Request req, Response res) {
+        try {
+            var user = new Gson().fromJson(req.body(), UserData.class);
+            chessService.getUserService().logout(user);
+            res.status(204);
+        } catch (Exception e) {
+            // failure response???
+        }
+
         return "";
     }
     private Object clearDatabase(Request req, Response res) {
-        chessService.clear();
-        res.status(204);    // successfully processed, no content to return
+        try {
+            chessService.clear();
+            res.status(204);    // successfully processed, no content to return
+        } catch (Exception e ) {
+            // failure response...
+        }
+
         return "";
     }
 }

@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.AuthDAO;
+import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import dataaccess.GameDAO;
 import model.AuthData;
@@ -39,7 +40,7 @@ public class ChessService {
       userDAO.deleteAllUsers();
       gameDAO.deleteAllGames();
     } catch (Exception e) {
-      throw new ServiceException("Error clearing data");
+      throw new ServiceException(500, "Error: ");
     }
   }
 }
