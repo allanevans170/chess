@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import dataaccess.*;
 import model.*;
 
-public class UserServiceTest {
+public class UserServiceTests {
   private MemoryAuthDAO memoryAuthDAO;
   private MemoryUserDAO memoryUserDAO;
   private UserService userService;
