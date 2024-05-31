@@ -105,7 +105,7 @@ public class UserServiceTest {
       fail("Should have thrown an exception");
 
     } catch (Exception e) {
-      System.out.println("error: "+e.getMessage());
+      assertEquals("Error: unauthorized", e.getMessage());
     }
   }
 }
