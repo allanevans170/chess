@@ -22,7 +22,7 @@ public class ClearServiceTest {
       memoryGameDAO.createGame(24, "magnusVsHikaru");
       memoryUserDAO.createUser("hikaruStickaru","magnus_stinks","hikaru@chess.com");
     } catch (Exception e) {
-      System.out.println("Exception caught in ClearServiceTest");
+      System.out.println("Error: "+e.getMessage());
     }
   }
   @Test
@@ -35,7 +35,7 @@ public class ClearServiceTest {
       assertEquals(0, memoryUserDAO.listUsers().size(),"UserDAO should be empty");
 
     } catch (Exception e) {
-      System.out.println("catching an exception in the positiveClearTest");
+      System.out.println("Error: "+e.getMessage());
     }
   }
 }
