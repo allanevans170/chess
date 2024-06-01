@@ -15,7 +15,7 @@ public class UserService {
     this.authDAO = authDAO;
   }
 
-  public AuthData register(UserData user) throws ServiceException {   // needs a success 200 and bad request 400
+  public AuthData register(UserData user) throws ServiceException {
     try {
       if (user.username() == "" || user.password() == "" || user.email() == "") {
         throw new ServiceException(400, "Error: bad request");
@@ -31,12 +31,9 @@ public class UserService {
     }
   }
 
-  public AuthData login(UserData user) throws ServiceException {   // success 200
+  public AuthData login(UserData user) throws ServiceException {
     try {
-      if (userDAO.getUser(user.username()) == null) {           // username not in database
-        throw new ServiceException(401, "Error: unauthorized");
-      }
-      if (user.password() != userDAO.getUser(user.username()).password()) {   // password verification
+      if (userDAO.getUser(user.username()) == null || user.password() != userDAO.getUser(user.username()).password()) {
         throw new ServiceException(401, "Error: unauthorized");
       }
       return authDAO.createAuth(user.username());

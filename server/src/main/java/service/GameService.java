@@ -17,10 +17,13 @@ public class GameService {
     this.authDAO = authDAO;
   }
 
-  public int createGame(AuthData auth, String gameName) throws ServiceException {    // username???
+  public int createGame(AuthData auth, String gameName) throws ServiceException {
     try {
       int currentID = nextID;
       nextID++;
+      if (gameName == "" || gameName == null) {
+        throw new ServiceException(400, "Error: bad request");
+      }
       if (authDAO.getAuth(auth.authToken()) == null) {
         throw new ServiceException(401, "Error: unauthorized");
       }
@@ -30,34 +33,42 @@ public class GameService {
       throw new ServiceException(500, "Error: "+e.getMessage());
     }
   }
-  public GameData joinGame(AuthData auth, String playerColor, int gameID) throws ServiceException {
+  public void joinGame(AuthData auth, String playerColor, int gameID) throws ServiceException {
+    try {
+      playerColor = playerColor.toUpperCase();
+      if ((!playerColor.equals("WHITE") && !playerColor.equals("BLACK")) ||   // incorrect player color
+              (gameDAO.getGame(gameID) == null))  {                           // game not found
+        throw new ServiceException(401, "Error: bad request");
+      }
+      if (authDAO.getAuth(auth.authToken()) == null) {
+        throw new ServiceException(401, "Error: unauthorized"); // unauthorized, no authToken
+      }
+
+      AuthData authenticated = authDAO.getAuth(auth.authToken());
+      GameData game = gameDAO.getGame(gameID);
+
+      if (game.whiteUsername() != null && playerColor.equals("WHITE") ||
+              game.blackUsername() != null && playerColor.equals("BLACK")) {
+        throw new ServiceException(401, "Error: already taken");  // player already taken
+      }
+      if (playerColor.equals("WHITE")) {
+        game = game.setWhiteUsername(authenticated.username());
+      } else if (playerColor.equals("BLACK")) {
+        game = game.setBlackUsername(authenticated.username());
+      }
+      gameDAO.updateGame(game);
+    } catch (DataAccessException e) {
+      throw new ServiceException(500, "Error: "+e.getMessage());
+    }
+  }
+  public Collection<GameData> listGames(AuthData auth) throws ServiceException {
     try {
       if (authDAO.getAuth(auth.authToken()) == null) {
         throw new ServiceException(401, "Error: unauthorized");
       }
-      AuthData authenticated = authDAO.getAuth(auth.authToken());
-
-      gameDAO.getGame(gameID);
+      return gameDAO.listGames();
     } catch (DataAccessException e) {
       throw new ServiceException(500, "Error: "+e.getMessage());
     }
-
-    return null;
   }
-  public Collection<GameData> listGames() throws ServiceException {
-//    try {
-//      return gameDAO.listGames();
-//    } catch (DataAccessException e) {
-//      throw new ServiceException(500, "error: description...");
-//    }
-    return null;
-  }
-//
-//  public void updateGame(GameData game) throws ServiceException {
-//    try {
-//      gameDAO.updateGame(game);
-//    }
-//    gameDAO.updateGame(game);
-//  }
-
 }

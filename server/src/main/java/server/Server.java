@@ -67,9 +67,8 @@ public class Server {
             var auth=chessService.getUserService().register(user);
             return new Gson().toJson(auth);
         } catch (ServiceException e) {
-            // failure response...
+            return e.getMessage();
         }
-        return "fail";
     }
     private Object LoginHandler(Request req, Response res) {
         try {

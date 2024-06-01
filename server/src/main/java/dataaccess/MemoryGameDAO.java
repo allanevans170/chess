@@ -22,11 +22,7 @@ public class MemoryGameDAO implements GameDAO {
 
   @Override
   public GameData getGame(int gameID) throws DataAccessException {
-    try {
-      return games.get(gameID);
-    } catch (Exception e) {
-      throw new DataAccessException("Game not found");
-    }
+    return games.get(gameID);
   }
 
   @Override
@@ -36,7 +32,10 @@ public class MemoryGameDAO implements GameDAO {
 
   @Override
   public void updateGame(GameData game) throws DataAccessException {
-    // how should I be updating the game here
+    if (games.get(game.gameID()) == null) {
+      throw new DataAccessException("Game not found");
+    }
+    games.put(game.gameID(), game);
   }
 
   @Override
