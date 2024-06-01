@@ -10,18 +10,14 @@ public class Main {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Server: " + piece);
 
-
         try {
             int port = 8080;
             if (args.length >= 1) {
                 port = Integer.parseInt(args[0]);
             }
-
-            //var service = new ChessService(new MemoryUserDAO(), new MemoryAuthDAO(), new MemoryGameDAO());
             Server server = new Server();
             port = server.port();
             System.out.println("Server running on port " + port);
-            return;
         } catch (Throwable ex) {
             System.out.println("Error: " + ex.getMessage());
             ex.printStackTrace();
