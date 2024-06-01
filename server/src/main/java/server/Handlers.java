@@ -1,7 +1,6 @@
 package server;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dataaccess.*;
 import model.AuthData;
@@ -93,7 +92,7 @@ public class Handlers {
   public Object clearDatabase(Request req, Response res) {
     try {
       chessService.clear();
-      res.status(200);    // successfully processed, no content to return
+      res.status(200);
       return new Gson().toJson(new JsonObject());
     } catch (ServiceException e) {
       ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
