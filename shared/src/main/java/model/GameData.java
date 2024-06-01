@@ -5,7 +5,7 @@ import chess.ChessGame;
 public record GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
 
   public GameData(int gameID, String gameName) {
-    this(gameID, "", "", gameName, new ChessGame());
+    this(gameID, null, null, gameName, new ChessGame());
   }
 
   public GameData setWhiteUsername(String whiteUsername) {
@@ -18,7 +18,7 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
 
   public String toString() {
     return "GameData{" +
-            "gameID=" + gameID +
+            "gameID = " + gameID +
             ", white user:'" + whiteUsername + '\'' +
             ", black user:'" + blackUsername + '\'' +
             ", gameName:'" + gameName + '\'' +
