@@ -15,4 +15,7 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
   public GameData setBlackUsername(String blackUsername) {
     return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
   }
+
+  // Should this be a record? would a regular class be better?
+  // I don't think the GameData objects should be immutable, so I may change this...
 }
