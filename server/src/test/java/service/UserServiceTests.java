@@ -86,9 +86,9 @@ public class UserServiceTests {
       assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auths");
       assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
 
-      userService.logout(auth1);
+      userService.logout(auth1.authToken());
       assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auths");
-      userService.logout(auth2);
+      userService.logout(auth2.authToken());
       assertEquals(0, memoryAuthDAO.listAuths().size(),"AuthDAO should have 0 auths");
       assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
 
@@ -101,7 +101,7 @@ public class UserServiceTests {
   public void negativeLogout() {
     try {
       AuthData auth1 = new AuthData("hikaru");
-      userService.logout(auth1);
+      userService.logout(auth1.authToken());
       fail("Should have thrown an exception");
 
     } catch (Exception e) {

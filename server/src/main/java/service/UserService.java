@@ -17,6 +17,9 @@ public class UserService {
 
   public AuthData register(UserData user) throws ServiceException {
     try {
+      if (user.username() == null || user.password() == null || user.email() == null) {
+        throw new ServiceException(400, "Error: bad request");
+      }
       if (user.username() == "" || user.password() == "" || user.email() == "") {
         throw new ServiceException(400, "Error: bad request");
       }
@@ -33,7 +36,8 @@ public class UserService {
 
   public AuthData login(UserData user) throws ServiceException {
     try {
-      if (userDAO.getUser(user.username()) == null || user.password() != userDAO.getUser(user.username()).password()) {
+      if (userDAO.getUser(user.username()) == null ||
+              !user.password().equals(userDAO.getUser(user.username()).password())) {
         throw new ServiceException(401, "Error: unauthorized");
       }
       return authDAO.createAuth(user.username());
@@ -42,12 +46,12 @@ public class UserService {
     }
   }
 
-  public void logout(AuthData auth) throws ServiceException {
+  public void logout(String authToken) throws ServiceException {
     try {
-      if (authDAO.getAuth(auth.authToken()) == null) {
+      if (authDAO.getAuth(authToken) == null) {
         throw new ServiceException(401, "Error: unauthorized");
       }
-      authDAO.deleteAuth(auth.authToken());
+      authDAO.deleteAuth(authToken);
     } catch (DataAccessException e) {
       throw new ServiceException(500, "Error: description...");
     }
