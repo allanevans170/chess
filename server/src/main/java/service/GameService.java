@@ -37,6 +37,7 @@ public class GameService {
       if (playerColor == null || gameID < 1) {
         throw new ServiceException(400, "Error: bad request");
       }
+
       playerColor = playerColor.toUpperCase();
       if ((!playerColor.equals("WHITE") && !playerColor.equals("BLACK")) ||   // incorrect player color
               (gameDAO.getGame(gameID) == null))  {                           // game not found

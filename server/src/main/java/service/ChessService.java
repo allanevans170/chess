@@ -29,7 +29,7 @@ public class ChessService {
     return gameService;
   }
 
-  public void clear() throws ServiceException { // UserData user, AuthData auth, GameData game
+  public void clear() throws ServiceException {
     try {
       authDAO.deleteAllAuths();
       userDAO.deleteAllUsers();

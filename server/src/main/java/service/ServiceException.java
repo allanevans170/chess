@@ -9,5 +9,4 @@ public class ServiceException extends Exception {
   public int getStatusCode() {
     return statusCode;
   }
-  // store status code and message
 }
