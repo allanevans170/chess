@@ -11,7 +11,7 @@ public class MemoryGameDAO implements GameDAO {
   public GameData createGame(int gameID, String gameName) throws DataAccessException {
     GameData game = new GameData(gameID, gameName);
     try {
-      games.put(game.gameID(), game);
+      games.put(game.getGameID(), game);
     } catch (Exception e) {
       throw new DataAccessException("Game not created");
     }
@@ -28,14 +28,14 @@ public class MemoryGameDAO implements GameDAO {
     return games.values();
   }
 
-  @Override
-  public GameData updateGame(GameData game) throws DataAccessException {
-    if (games.get(game.gameID()) == null) {
-      throw new DataAccessException("Game not found");
-    }
-    games.put(game.gameID(), game);
-    return game;
-  }
+//  @Override
+//  public GameData updateGame(GameData game) throws DataAccessException {
+//    if (games.get(game.getGameID()) == null) {
+//      throw new DataAccessException("Game not found");
+//    }
+//    games.put(game.getGameID(), game);
+//    return game;
+//  }
 
   @Override
   public void deleteAllGames() throws DataAccessException {

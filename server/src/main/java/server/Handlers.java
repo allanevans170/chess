@@ -62,7 +62,7 @@ public class Handlers {
     try {
       String authToken = req.headers("Authorization");
       GameData game = new Gson().fromJson(req.body(), GameData.class);
-      return new Gson().toJson(chessService.getGameService().createGame(authToken, game.gameName()));
+      return new Gson().toJson(chessService.getGameService().createGame(authToken, game.getGameName()));
     } catch (ServiceException e) {
       return handleExceptions(e, res);
     }

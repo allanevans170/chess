@@ -50,16 +50,16 @@ public class GameService {
       AuthData authenticated = authDAO.getAuth(authToken);
       GameData game = gameDAO.getGame(gameID);
 
-      if (game.whiteUsername() != null && playerColor.equals("WHITE") ||
-              game.blackUsername() != null && playerColor.equals("BLACK")) {
+      if (game.getWhiteUsername() != null && playerColor.equals("WHITE") ||
+              game.getBlackUsername() != null && playerColor.equals("BLACK")) {
         throw new ServiceException(403, "Error: already taken");              // player already taken
       }
       if (playerColor.equals("WHITE")) {
-        game = game.setWhiteUsername(authenticated.username());
+        game.setWhiteUsername(authenticated.username());
       } else if (playerColor.equals("BLACK")) {
-        game = game.setBlackUsername(authenticated.username());
+        game.setBlackUsername(authenticated.username());
       }
-      return gameDAO.updateGame(game);
+      return game;
     } catch (DataAccessException e) {
       throw new ServiceException(500, "Error: "+e.getMessage());
     }

@@ -2,20 +2,43 @@ package model;
 
 import chess.ChessGame;
 
-public record GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
+public class GameData {
+  private final int gameID;
+    private String whiteUsername;
+    private String blackUsername;
+    private final String gameName;
+    private ChessGame game;
 
   public GameData(int gameID, String gameName) {
-    this(gameID, null, null, gameName, new ChessGame());
+    this.gameID = gameID;
+    this.gameName = gameName;
+    this.game = new ChessGame();
   }
 
-  public GameData setWhiteUsername(String whiteUsername) {
-    return new GameData(gameID, whiteUsername, blackUsername,  gameName, game);
+  public void setWhiteUsername(String whiteUser) {
+    whiteUsername = whiteUser;
   }
 
-  public GameData setBlackUsername(String blackUsername) {
-    return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
+  public void setBlackUsername(String blackUser) {
+    blackUsername = blackUser;
   }
 
-  // Should this be a record? would a regular class be better?
-  // I don't think the GameData objects should be immutable, so I may change this...
+  public int getGameID() {
+    return gameID;
+  }
+  public String getGameName() {
+    return gameName;
+  }
+
+  public String getWhiteUsername() {
+    return whiteUsername;
+  }
+  public String getBlackUsername() {
+    return blackUsername;
+  }
+
+  public ChessGame getGame() {
+    return game;
+  }
+
 }
