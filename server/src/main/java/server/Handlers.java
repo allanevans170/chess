@@ -18,7 +18,7 @@ import java.util.Map;
 public class Handlers {
   private final ChessService chessService = new ChessService(new MemoryUserDAO(), new MemoryAuthDAO(), new MemoryGameDAO());
 
-  public Object RegisterHandler(Request req, Response res) {
+  public Object registerHandler(Request req, Response res) {
     UserData user = new Gson().fromJson(req.body(), UserData.class);
     try {
       AuthData auth = chessService.getUserService().register(user);
@@ -30,7 +30,7 @@ public class Handlers {
       return new Gson().toJson(d);
     }
   }
-  public Object LoginHandler(Request req, Response res) {
+  public Object loginHandler(Request req, Response res) {
     try {
       UserData user = new Gson().fromJson(req.body(), UserData.class);
       AuthData auth = chessService.getUserService().login(user);
@@ -42,7 +42,7 @@ public class Handlers {
       return new Gson().toJson(d);
     }
   }
-  public Object LogoutHandler(Request req, Response res) {
+  public Object logoutHandler(Request req, Response res) {
     try {
       String authToken = req.headers("Authorization");
       chessService.getUserService().logout(authToken);
@@ -54,7 +54,7 @@ public class Handlers {
       return new Gson().toJson(d);
     }
   }
-  public Object ListGamesHandler(Request req, Response res) {
+  public Object listGamesHandler(Request req, Response res) {
     try {
       String authToken = req.headers("Authorization");
       Collection<GameData> games = chessService.getGameService().listGames(authToken);
@@ -66,7 +66,7 @@ public class Handlers {
       return new Gson().toJson(d);
     }
   }
-  public Object CreateGameHandler(Request req, Response res) {
+  public Object createGameHandler(Request req, Response res) {
     try {
       String authToken = req.headers("Authorization");
       GameData game = new Gson().fromJson(req.body(), GameData.class);
@@ -77,7 +77,7 @@ public class Handlers {
       return new Gson().toJson(d);
     }
   }
-  public Object JoinGameHandler(Request req, Response res) {
+  public Object joinGameHandler(Request req, Response res) {
     try {
       String authToken = req.headers("Authorization");
       JoinGameRequest gameRequest = new Gson().fromJson(req.body(), JoinGameRequest.class);
@@ -89,7 +89,7 @@ public class Handlers {
     }
   }
 
-  public Object clearDatabase(Request req, Response res) {
+  public Object clearDatabaseHandler(Request req, Response res) {
     try {
       chessService.clear();
       res.status(200);

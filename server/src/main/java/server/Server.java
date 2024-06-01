@@ -15,13 +15,13 @@ public class Server {
 
         Handlers handler = new Handlers();
 
-        Spark.post("/user", handler::RegisterHandler);
-        Spark.post("/session", handler::LoginHandler);
-        Spark.get("/game", handler::ListGamesHandler);
-        Spark.post("/game", handler::CreateGameHandler);
-        Spark.put("/game", handler::JoinGameHandler);
-        Spark.delete("/session", handler::LogoutHandler);
-        Spark.delete("/db", handler::clearDatabase);
+        Spark.post("/user", handler::registerHandler);
+        Spark.post("/session", handler::loginHandler);
+        Spark.get("/game", handler::listGamesHandler);
+        Spark.post("/game", handler::createGameHandler);
+        Spark.put("/game", handler::joinGameHandler);
+        Spark.delete("/session", handler::logoutHandler);
+        Spark.delete("/db", handler::clearDatabaseHandler);
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -34,5 +34,4 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
-
 }

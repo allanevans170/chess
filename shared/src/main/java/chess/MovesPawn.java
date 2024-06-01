@@ -15,7 +15,7 @@ public class MovesPawn extends MoveMaker {
           Directions.DOWN,
           Directions.DOWN_RIGHT
   };
-  private ChessPiece.PieceType[] PromotionPieces = {
+  private ChessPiece.PieceType[] promotionPieces = {
           ChessPiece.PieceType.QUEEN,
           ChessPiece.PieceType.BISHOP,
           ChessPiece.PieceType.KNIGHT,
@@ -76,7 +76,7 @@ public class MovesPawn extends MoveMaker {
       pawnMoves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
     }
     else {
-      for (ChessPiece.PieceType piece : PromotionPieces) {
+      for (ChessPiece.PieceType piece : promotionPieces) {
         pawnMoves.add(new ChessMove(myPosition, new ChessPosition(row, col), piece));
       }
     }
