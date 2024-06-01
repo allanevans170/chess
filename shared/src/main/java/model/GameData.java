@@ -15,13 +15,4 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
   public GameData setBlackUsername(String blackUsername) {
     return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
   }
-
-  public String toString() {
-    return "GameData{" +
-            "gameID = " + gameID +
-            ", white user:'" + whiteUsername + '\'' +
-            ", black user:'" + blackUsername + '\'' +
-            ", gameName:'" + gameName + '\'' +
-            '}';
-  }
 }

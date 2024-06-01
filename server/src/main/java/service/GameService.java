@@ -43,7 +43,7 @@ public class GameService {
         throw new ServiceException(401, "Error: bad request");
       }
       if (authDAO.getAuth(authToken) == null) {
-        throw new ServiceException(401, "Error: unauthorized"); // unauthorized, no authToken
+        throw new ServiceException(401, "Error: unauthorized");               // unauthorized, no authToken
       }
 
       AuthData authenticated = authDAO.getAuth(authToken);
@@ -51,7 +51,7 @@ public class GameService {
 
       if (game.whiteUsername() != null && playerColor.equals("WHITE") ||
               game.blackUsername() != null && playerColor.equals("BLACK")) {
-        throw new ServiceException(403, "Error: already taken");  // player already taken
+        throw new ServiceException(403, "Error: already taken");              // player already taken
       }
       if (playerColor.equals("WHITE")) {
         game = game.setWhiteUsername(authenticated.username());
