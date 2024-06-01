@@ -25,9 +25,7 @@ public class Handlers {
       res.status(200);
       return new Gson().toJson(auth);
     } catch (ServiceException e) {
-      ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
-      res.status(d.statusCode());
-      return new Gson().toJson(d);
+      return handleExceptions(e, res);
     }
   }
   public Object loginHandler(Request req, Response res) {
@@ -37,9 +35,7 @@ public class Handlers {
       res.status(200);
       return new Gson().toJson(auth);
     } catch (ServiceException e) {
-      ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
-      res.status(d.statusCode());
-      return new Gson().toJson(d);
+      return handleExceptions(e, res);
     }
   }
   public Object logoutHandler(Request req, Response res) {
@@ -49,9 +45,7 @@ public class Handlers {
       res.status(200);
       return new Gson().toJson(new JsonObject());
     } catch (ServiceException e) {
-      ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
-      res.status(d.statusCode());
-      return new Gson().toJson(d);
+      return handleExceptions(e, res);
     }
   }
   public Object listGamesHandler(Request req, Response res) {
@@ -61,9 +55,7 @@ public class Handlers {
       var stuff = new Gson().toJson(Map.of("games:", games));
       return new Gson().toJson(Map.of("games", games));
     } catch (ServiceException e) {
-      ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
-      res.status(d.statusCode());
-      return new Gson().toJson(d);
+      return handleExceptions(e, res);
     }
   }
   public Object createGameHandler(Request req, Response res) {
@@ -72,9 +64,7 @@ public class Handlers {
       GameData game = new Gson().fromJson(req.body(), GameData.class);
       return new Gson().toJson(chessService.getGameService().createGame(authToken, game.gameName()));
     } catch (ServiceException e) {
-      ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
-      res.status(d.statusCode());
-      return new Gson().toJson(d);
+      return handleExceptions(e, res);
     }
   }
   public Object joinGameHandler(Request req, Response res) {
@@ -83,9 +73,7 @@ public class Handlers {
       JoinGameRequest gameRequest = new Gson().fromJson(req.body(), JoinGameRequest.class);
       return new Gson().toJson(chessService.getGameService().joinGame(authToken, gameRequest.playerColor(), gameRequest.gameID()));
     } catch (ServiceException e) {
-      ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
-      res.status(d.statusCode());
-      return new Gson().toJson(d);
+      return handleExceptions(e, res);
     }
   }
 
@@ -95,9 +83,13 @@ public class Handlers {
       res.status(200);
       return new Gson().toJson(new JsonObject());
     } catch (ServiceException e) {
-      ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
-      res.status(d.statusCode());
-      return new Gson().toJson(d);
+      return handleExceptions(e, res);
     }
+  }
+
+  public static String handleExceptions(Exception e, Response res) {
+    ServiceExceptionRecord d = new ServiceExceptionRecord(500, e.getMessage());
+    res.status(d.statusCode());
+    return new Gson().toJson(d);
   }
 }
