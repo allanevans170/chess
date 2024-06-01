@@ -17,34 +17,33 @@ public class GameService {
     this.authDAO = authDAO;
   }
 
-  public int createGame(AuthData auth, String gameName) throws ServiceException {
+  public GameData createGame(String authToken, String gameName) throws ServiceException {
     try {
       int currentID = nextID;
       nextID++;
       if (gameName == "" || gameName == null) {
         throw new ServiceException(400, "Error: bad request");
       }
-      if (authDAO.getAuth(auth.authToken()) == null) {
+      if (authDAO.getAuth(authToken) == null) {
         throw new ServiceException(401, "Error: unauthorized");
       }
-      gameDAO.createGame(currentID, gameName);
-      return currentID;
+      return gameDAO.createGame(currentID, gameName);
     } catch (DataAccessException e) {
       throw new ServiceException(500, "Error: "+e.getMessage());
     }
   }
-  public void joinGame(AuthData auth, String playerColor, int gameID) throws ServiceException {
+  public GameData joinGame(String authToken, String playerColor, int gameID) throws ServiceException {
     try {
       playerColor = playerColor.toUpperCase();
       if ((!playerColor.equals("WHITE") && !playerColor.equals("BLACK")) ||   // incorrect player color
               (gameDAO.getGame(gameID) == null))  {                           // game not found
         throw new ServiceException(401, "Error: bad request");
       }
-      if (authDAO.getAuth(auth.authToken()) == null) {
+      if (authDAO.getAuth(authToken) == null) {
         throw new ServiceException(401, "Error: unauthorized"); // unauthorized, no authToken
       }
 
-      AuthData authenticated = authDAO.getAuth(auth.authToken());
+      AuthData authenticated = authDAO.getAuth(authToken);
       GameData game = gameDAO.getGame(gameID);
 
       if (game.whiteUsername() != null && playerColor.equals("WHITE") ||
@@ -56,7 +55,7 @@ public class GameService {
       } else if (playerColor.equals("BLACK")) {
         game = game.setBlackUsername(authenticated.username());
       }
-      gameDAO.updateGame(game);
+      return gameDAO.updateGame(game);
     } catch (DataAccessException e) {
       throw new ServiceException(500, "Error: "+e.getMessage());
     }

@@ -27,10 +27,10 @@ public class GameServiceTests {
       assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
       assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
 
-      int gameID = chessService.getGameService().createGame(auth, "magnusVsHikaru");
+      GameData game = chessService.getGameService().createGame(auth.authToken(), "magnusVsHikaru");
 
       assertEquals(1, memoryGameDAO.listGames().size(),"GameDAO should have 1 game");
-      assertEquals("magnusVsHikaru", memoryGameDAO.getGame(gameID).gameName());
+      assertEquals("magnusVsHikaru", game.gameName());
 
     } catch (Exception e) {
       System.out.println("error: "+e.getMessage());
@@ -45,7 +45,7 @@ public class GameServiceTests {
       assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
       assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
 
-      int gameID = chessService.getGameService().createGame(new AuthData("bill", "x"), "magnusVsHikaru");
+      GameData game = chessService.getGameService().createGame("Billy'sFalseToken", "magnusVsHikaru");
       fail("Should have thrown an exception");
 
     } catch (Exception e) {
@@ -58,13 +58,13 @@ public class GameServiceTests {
     try {
       AuthData auth = chessService.getUserService().register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
       AuthData auth2 = chessService.getUserService().register(new UserData("magnus","hikaru_stinks","magnus@chess.com"));
-      int gameID = chessService.getGameService().createGame(auth, "hikaruVsMagnus");
-      chessService.getGameService().joinGame(auth2, "WHITE", gameID); // magnus joins as white
-      chessService.getGameService().joinGame(auth, "BLACK", gameID);  // hikaru joins as black
+      GameData game = chessService.getGameService().createGame(auth.authToken(), "hikaruVsMagnus");
+      chessService.getGameService().joinGame(auth2.authToken(), "WHITE", game.gameID()); // magnus joins as white
+      chessService.getGameService().joinGame(auth.authToken(), "BLACK", game.gameID());  // hikaru joins as black
 
       assertEquals(1, chessService.getGameService().listGames(auth).size(), "Should have 1 game");
-      assertEquals("hikaru", memoryGameDAO.getGame(gameID).blackUsername());
-        assertEquals("magnus", memoryGameDAO.getGame(gameID).whiteUsername());
+      assertEquals("hikaru", memoryGameDAO.getGame(game.gameID()).blackUsername());
+        assertEquals("magnus", memoryGameDAO.getGame(game.gameID()).whiteUsername());
     } catch (Exception e) {
       System.out.println("error: " + e.getMessage());
     }
@@ -74,8 +74,8 @@ public class GameServiceTests {
   public void negativeJoinGame() {
     try {
       AuthData auth = chessService.getUserService().register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
-      int gameID = chessService.getGameService().createGame(auth, "hikaruVsMagnus");
-      chessService.getGameService().joinGame(auth, "red", gameID);        // incorrect player color
+      GameData game = chessService.getGameService().createGame(auth.authToken(), "hikaruVsMagnus");
+      chessService.getGameService().joinGame(auth.authToken(), "red", game.gameID());        // incorrect player color
       fail("Should have thrown an exception");
     } catch (Exception e) {
       assertEquals("Error: bad request", e.getMessage());
@@ -88,8 +88,8 @@ public class GameServiceTests {
       AuthData auth1 = chessService.getUserService().register(new UserData("hikaru","magnus_stinks","n@gmail.com"));
       String game1 = "hikaruVsMagnus";
       String game2 = "hikaruVsGotham";
-      chessService.getGameService().createGame(auth1, game1);
-      chessService.getGameService().createGame(auth1, game2);
+      chessService.getGameService().createGame(auth1.authToken(), game1);
+      chessService.getGameService().createGame(auth1.authToken(), game2);
 
       Collection<GameData> listOfGames = chessService.getGameService().listGames(auth1);
       StringBuilder output = new StringBuilder();

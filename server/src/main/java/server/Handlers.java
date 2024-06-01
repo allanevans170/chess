@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dataaccess.*;
 import model.AuthData;
+import model.GameData;
+import model.JoinGameRequest;
 import model.UserData;
 import service.*;
 import spark.Request;
@@ -60,33 +62,37 @@ public class Handlers {
     }
   }
   public Object CreateGameHandler(Request req, Response res) {
-//        var game = new Gson().fromJson(req.body(), GameData.class);
-//        var newGame = chessService.getGameService().createGame(game);
-//        return new Gson().toJson(newGame);
-    return null;
-  }
-  public Object JoinGameHandler(Request req, Response res) {
-//        var game = new Gson().fromJson(req.body(), GameData.class);
-//        var joinedGame = chessService.getGameService().joinGame(game);
-//        return new Gson().toJson(joinedGame);
-   try {
-
-   } catch (ServiceException e) {
+    try {
+      String authToken = req.headers("Authorization");
+      GameData game = new Gson().fromJson(req.body(), GameData.class);
+      return new Gson().toJson(chessService.getGameService().createGame(authToken, game.gameName()));
+    } catch (ServiceException e) {
       ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
       res.status(d.statusCode());
       return new Gson().toJson(d);
+    }
+  }
+  public Object JoinGameHandler(Request req, Response res) {
+    try {
+      String authToken = req.headers("Authorization");
+      JoinGameRequest gameRequest = new Gson().fromJson(req.body(), JoinGameRequest.class);
+      return new Gson().toJson(chessService.getGameService().joinGame(authToken, gameRequest.playerColor(), gameRequest.gameID()));
+    } catch (ServiceException e) {
+      ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
+      res.status(d.statusCode());
+      return new Gson().toJson(d);
+    }
   }
 
   public Object clearDatabase(Request req, Response res) {
     try {
       chessService.clear();
       res.status(200);    // successfully processed, no content to return
+      return new Gson().toJson(new JsonObject());
     } catch (ServiceException e) {
       ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
       res.status(d.statusCode());
       return new Gson().toJson(d);
     }
-
-    return "";
   }
 }

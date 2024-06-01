@@ -10,14 +10,14 @@ public class MemoryGameDAO implements GameDAO {
 
   final private HashMap<Integer, GameData> games = new HashMap<>();
   @Override
-  public int createGame(int gameID, String gameName) throws DataAccessException {
+  public GameData createGame(int gameID, String gameName) throws DataAccessException {
     GameData game = new GameData(gameID, gameName);
     try {
       games.put(game.gameID(), game);
     } catch (Exception e) {
       throw new DataAccessException("Game not created");
     }
-    return game.gameID();
+    return game;
   }
 
   @Override
@@ -31,11 +31,12 @@ public class MemoryGameDAO implements GameDAO {
   }
 
   @Override
-  public void updateGame(GameData game) throws DataAccessException {
+  public GameData updateGame(GameData game) throws DataAccessException {
     if (games.get(game.gameID()) == null) {
       throw new DataAccessException("Game not found");
     }
     games.put(game.gameID(), game);
+    return game;
   }
 
   @Override
