@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dataaccess.*;
 import model.AuthData;
@@ -11,6 +12,9 @@ import service.*;
 import spark.Request;
 import spark.Response;
 import service.ChessService;
+
+import java.util.Collection;
+import java.util.Map;
 
 public class Handlers {
   private final ChessService chessService = new ChessService(new MemoryUserDAO(), new MemoryAuthDAO(), new MemoryGameDAO());
@@ -53,8 +57,10 @@ public class Handlers {
   }
   public Object ListGamesHandler(Request req, Response res) {
     try {
-      AuthData auth = new Gson().fromJson(req.body(), AuthData.class);
-      return new Gson().toJson(chessService.getGameService().listGames(auth));
+      String authToken = req.headers("Authorization");
+      Collection<GameData> games = chessService.getGameService().listGames(authToken);
+      var stuff = new Gson().toJson(Map.of("games:", games));
+      return new Gson().toJson(Map.of("games", games));
     } catch (ServiceException e) {
       ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
       res.status(d.statusCode());

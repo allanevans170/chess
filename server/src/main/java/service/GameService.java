@@ -34,6 +34,9 @@ public class GameService {
   }
   public GameData joinGame(String authToken, String playerColor, int gameID) throws ServiceException {
     try {
+      if (playerColor == null || gameID < 1) {
+        throw new ServiceException(400, "Error: bad request");
+      }
       playerColor = playerColor.toUpperCase();
       if ((!playerColor.equals("WHITE") && !playerColor.equals("BLACK")) ||   // incorrect player color
               (gameDAO.getGame(gameID) == null))  {                           // game not found
@@ -48,7 +51,7 @@ public class GameService {
 
       if (game.whiteUsername() != null && playerColor.equals("WHITE") ||
               game.blackUsername() != null && playerColor.equals("BLACK")) {
-        throw new ServiceException(401, "Error: already taken");  // player already taken
+        throw new ServiceException(403, "Error: already taken");  // player already taken
       }
       if (playerColor.equals("WHITE")) {
         game = game.setWhiteUsername(authenticated.username());
@@ -60,9 +63,9 @@ public class GameService {
       throw new ServiceException(500, "Error: "+e.getMessage());
     }
   }
-  public Collection<GameData> listGames(AuthData auth) throws ServiceException {
+  public Collection<GameData> listGames(String authToken) throws ServiceException {
     try {
-      if (authDAO.getAuth(auth.authToken()) == null) {
+      if ((authToken == null) || (authDAO.getAuth(authToken) == null)) {
         throw new ServiceException(401, "Error: unauthorized");
       }
       return gameDAO.listGames();

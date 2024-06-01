@@ -62,7 +62,7 @@ public class GameServiceTests {
       chessService.getGameService().joinGame(auth2.authToken(), "WHITE", game.gameID()); // magnus joins as white
       chessService.getGameService().joinGame(auth.authToken(), "BLACK", game.gameID());  // hikaru joins as black
 
-      assertEquals(1, chessService.getGameService().listGames(auth).size(), "Should have 1 game");
+      assertEquals(1, chessService.getGameService().listGames(auth.authToken()).size(), "Should have 1 game");
       assertEquals("hikaru", memoryGameDAO.getGame(game.gameID()).blackUsername());
         assertEquals("magnus", memoryGameDAO.getGame(game.gameID()).whiteUsername());
     } catch (Exception e) {
@@ -91,7 +91,7 @@ public class GameServiceTests {
       chessService.getGameService().createGame(auth1.authToken(), game1);
       chessService.getGameService().createGame(auth1.authToken(), game2);
 
-      Collection<GameData> listOfGames = chessService.getGameService().listGames(auth1);
+      Collection<GameData> listOfGames = chessService.getGameService().listGames(auth1.authToken());
       StringBuilder output = new StringBuilder();
       String expectedOutput = game1 + "\n" + game2 + "\n";
 
@@ -100,7 +100,7 @@ public class GameServiceTests {
       }
       String out = output.toString();
       assertEquals(out, expectedOutput, "Printed game names should be the same");
-      assertEquals(2, chessService.getGameService().listGames(auth1).size(),"Should have 2 games");
+      assertEquals(2, chessService.getGameService().listGames(auth1.authToken()).size(),"Should have 2 games");
     } catch (Exception e) {
       System.out.println("error: "+e.getMessage());
     }
@@ -110,7 +110,7 @@ public class GameServiceTests {
   public void negativeListGames() {
     try {
       AuthData auth = (new AuthData("hikaru"));
-      chessService.getGameService().listGames(auth);
+      chessService.getGameService().listGames(auth.authToken());
       fail("Should have thrown an exception");
 
     } catch (Exception e) {
