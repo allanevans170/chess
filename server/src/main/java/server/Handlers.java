@@ -87,8 +87,8 @@ public class Handlers {
     }
   }
 
-  public static String handleExceptions(Exception e, Response res) {
-    ServiceExceptionRecord d = new ServiceExceptionRecord(500, e.getMessage());
+  public static String handleExceptions(ServiceException e, Response res) {
+    ServiceExceptionRecord d = new ServiceExceptionRecord(e.getStatusCode(), e.getMessage());
     res.status(d.statusCode());
     return new Gson().toJson(d);
   }
