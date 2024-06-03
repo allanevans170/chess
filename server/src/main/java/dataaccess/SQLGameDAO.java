@@ -4,7 +4,7 @@ import model.GameData;
 
 import java.util.Collection;
 
-public class SQLGameDAO implements GameDAO {
+public class SQLGameDAO extends SQLAccess implements GameDAO {
   @Override
   public GameData createGame(int gameID, String gameName) throws DataAccessException {
     return null;

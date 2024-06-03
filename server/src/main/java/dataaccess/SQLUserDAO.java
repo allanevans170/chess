@@ -4,7 +4,7 @@ import model.UserData;
 
 import java.util.Collection;
 
-public class SQLUserDAO implements UserDAO {
+public class SQLUserDAO extends SQLAccess implements UserDAO {
   @Override
   public void createUser(String username, String password, String email) throws DataAccessException {
 
