@@ -51,8 +51,8 @@ public class SQLAccess {
             
             CREATE TABLE IF NOT EXISTS games (
               `gameID` INT NOT NULL AUTO_INCREMENT,
-              `whiteUsername` VARCHAR(256) NOT NULL,
-              `blackUsername` VARCHAR(256) NOT NULL,
+              `whiteUsername` VARCHAR(256) DEFAULT NULL,
+              `blackUsername` VARCHAR(256) DEFAULT NULL,
               `gameName` VARCHAR(256) NOT NULL,
               `game` TEXT DEFAULT NULL,
               PRIMARY KEY (`gameID`)

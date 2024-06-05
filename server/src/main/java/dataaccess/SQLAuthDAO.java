@@ -19,9 +19,8 @@ public class SQLAuthDAO extends SQLAccess implements AuthDAO {
   public AuthData createAuth(String username) throws DataAccessException {
     AuthData auth = new AuthData(username);                                     // creation of AuthData object
     String statement = "INSERT INTO auths (authToken, username) VALUES (?, ?)";     // preparing SQL statement
-    String json = new Gson().toJson(new AuthData(username));
-    executeUpdate(statement, auth.authToken(), auth.username(), json);
-    return new AuthData(username);
+    executeUpdate(statement, auth.authToken(), auth.username());
+    return auth;
   }
 
   @Override

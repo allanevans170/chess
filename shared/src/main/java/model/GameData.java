@@ -3,14 +3,13 @@ package model;
 import chess.ChessGame;
 
 public class GameData {
-  private final int gameID;
+  private int gameID;
   private String whiteUsername;
   private String blackUsername;
   private final String gameName;
   private ChessGame game;
 
-  public GameData(int gameID, String gameName) {
-    this.gameID = gameID;
+  public GameData(String gameName) {
     this.gameName = gameName;
     this.game = new ChessGame();
   }
@@ -25,6 +24,9 @@ public class GameData {
 
   public int getGameID() {
     return gameID;
+  }
+  public void setGameID(int gameID) {
+    this.gameID = gameID;
   }
   public String getGameName() {
     return gameName;

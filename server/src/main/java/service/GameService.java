@@ -27,7 +27,7 @@ public class GameService {
       if (authDAO.getAuth(authToken) == null) {
         throw new ServiceException(401, "Error: unauthorized");
       }
-      return gameDAO.createGame(currentID, gameName);
+      return gameDAO.createGame(gameName);
     } catch (DataAccessException e) {
       throw new ServiceException(500, "Error: "+e.getMessage());
     }

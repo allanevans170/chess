@@ -19,7 +19,7 @@ public class ClearServiceTest {
 
     try {
       memoryAuthDAO.createAuth("yoloChessboi69");
-      memoryGameDAO.createGame(24, "magnusVsHikaru");
+      memoryGameDAO.createGame("magnusVsHikaru");
       memoryUserDAO.createUser("hikaruStickaru","magnus_stinks","hikaru@chess.com");
     } catch (Exception e) {
       System.out.println("Error: "+e.getMessage());

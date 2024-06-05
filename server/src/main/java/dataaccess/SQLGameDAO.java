@@ -4,16 +4,23 @@ import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
 
+import javax.xml.crypto.Data;
 import java.util.Collection;
 
 public class SQLGameDAO extends SQLAccess implements GameDAO {
   @Override
-  public GameData createGame(int gameID, String gameName) throws DataAccessException {
-    GameData game = new GameData(gameID, gameName);                                     // creation of AuthData object
-    String statement = "INSERT INTO games (authToken, username) VALUES (?, ?)";     // preparing SQL statement
-    String json = new Gson().toJson(new AuthData(username));
-    executeUpdate(statement, auth.authToken(), auth.username(), json);
-    return new AuthData(username);
+  public GameData createGame(String gameName) throws DataAccessException {
+    GameData game = new GameData(gameName);                                     // creation of AuthData object
+    String gameJson = new Gson().toJson(game.getGame());                        // converting AuthData object to JSON
+    String statement = "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
+
+    try {
+      int gameID=executeUpdate(statement, game.getGameID(), game.getWhiteUsername(), game.getBlackUsername(), game.getGameName(), gameJson);
+      game.setGameID(gameID);
+    } catch (DataAccessException e) {
+      throw new DataAccessException("Game not created");
+    }
+    return game;
   }
 
   @Override

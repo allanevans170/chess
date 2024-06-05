@@ -8,8 +8,8 @@ public class MemoryGameDAO implements GameDAO {
 
   final private HashMap<Integer, GameData> games = new HashMap<>();
   @Override
-  public GameData createGame(int gameID, String gameName) throws DataAccessException {
-    GameData game = new GameData(gameID, gameName);
+  public GameData createGame(String gameName) throws DataAccessException {
+    GameData game = new GameData(gameName);
     try {
       games.put(game.getGameID(), game);
     } catch (Exception e) {
