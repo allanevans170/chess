@@ -311,15 +311,18 @@ public class DataAccessTests {
   }
 
   @Test
-  public void positiveGetGame() {   // can I get a game that I created?
+  public void positiveGetGame() {
     try {
-      GameData game = sqlGameDAO.createGame("gokuVsPicolo");
+      GameData game = sqlGameDAO.createGame("professorXVsMagneto");
+      game.setWhiteUsername("MLK");
+      game.setBlackUsername("MalcolmX");
+      sqlGameDAO.updateGame(game);
       GameData game2 = sqlGameDAO.getGame(game.getGameID());
 
-      assertNotNull(game2, "Game should not be null");
       //assertEquals(game.getGame(), game2.getGame(), "Games should match");
       assertEquals(game.getGameName(), game2.getGameName(), "Game names should match");
-      assertEquals(game.getWhiteUsername(), game2.getWhiteUsername(), "White usernames should match");
+      assertEquals("MLK", game2.getWhiteUsername(), "White usernames should match");
+      assertEquals("MalcolmX", game2.getBlackUsername(), "Black usernames should match");
       assertEquals(game.getGameID(), game2.getGameID(), "Game IDs should match");
 
     } catch (Exception e) {
