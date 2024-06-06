@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +14,8 @@ public class SQLUserDAO extends SQLAccess implements UserDAO {
 
   @Override
   public void createUser(String username, String password, String email) throws DataAccessException {
-    UserData user = new UserData(username, password, email);
+    String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+    UserData user = new UserData(username, hashedPassword, email);
     String statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
     executeUpdate(statement, user.username(), user.password(), user.email());
   }
