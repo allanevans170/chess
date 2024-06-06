@@ -55,10 +55,10 @@ public class SQLAuthDAO extends SQLAccess implements AuthDAO {
   }
 
   private AuthData readAuth(ResultSet rs) throws SQLException {
-    String authToken = rs.getString("authToken");
     String username = rs.getString("username");
+    String authToken = rs.getString("authToken");
 
-    return new AuthData(authToken, username);
+    return new AuthData(username, authToken);
   }
 
   @Override
