@@ -53,6 +53,9 @@ public class SQLAuthDAO extends SQLAccess implements AuthDAO {
     try (var conn = DatabaseManager.getConnection();
          var ps = conn.prepareStatement(statement)) {
       ps.setString(1, authToken);
+      if (ps.executeUpdate() == 0) {
+        throw new DataAccessException("Unable to delete auth: auth not found");
+      }
       ps.executeUpdate();
     } catch (SQLException e) {
       throw new DataAccessException("Unable to delete auth: " + e.getMessage());
