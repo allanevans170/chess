@@ -12,7 +12,6 @@ import static java.sql.Types.NULL;
 public class SQLAuthDAO extends SQLAccess implements AuthDAO {
 
   public SQLAuthDAO() throws DataAccessException {
-    configureDatabase();
   }
 
   @Override
@@ -24,15 +23,30 @@ public class SQLAuthDAO extends SQLAccess implements AuthDAO {
   }
 
   @Override
+  public AuthData getAuth(String authToken) throws DataAccessException {
+    String statement = "SELECT authToken, username FROM auths WHERE authToken = ?";
+
+    try (var conn = DatabaseManager.getConnection();
+         var ps = conn.prepareStatement(statement)) {
+      ps.setString(1, authToken);
+      ResultSet rs = ps.executeQuery();
+      if (rs.next()) {
+        return readAuth(rs);
+      }
+    } catch (SQLException e) {
+      throw new DataAccessException("Unable to get auth: " + e.getMessage());
+    }
+    return null; // if no auth is found
+  }
+  @Override
   public Collection<AuthData> listAuths() throws DataAccessException {
-    Collection<AuthData> result = new ArrayList<AuthData>();
-    try (var conn = DatabaseManager.getConnection()) {
-      String statement = "SELECT authToken, username FROM auth";
-      try (PreparedStatement ps = conn.prepareStatement(statement)) {
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-          result.add(new AuthData(rs.getString("username")));
-        }
+    Collection<AuthData> result = new ArrayList<>();
+    String statement = "SELECT authToken, username FROM auth";
+    try (var conn = DatabaseManager.getConnection();
+         PreparedStatement ps = conn.prepareStatement(statement)) {
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        result.add(readAuth(rs));
       }
     } catch (Exception e) {
       throw new DataAccessException("Unable to list auths: " + e.getMessage());
@@ -40,16 +54,11 @@ public class SQLAuthDAO extends SQLAccess implements AuthDAO {
     return result;
   }
 
-  @Override
-  public AuthData getAuth(String authToken) throws DataAccessException {
-    return null;
-  }
-
   private AuthData readAuth(ResultSet rs) throws SQLException {
     String authToken = rs.getString("authToken");
-    String json = rs.getString("username");
-    AuthData auth = new Gson().fromJson(username, authToken);
-    return pet.setId(id);
+    String username = rs.getString("username");
+
+    return new AuthData(authToken, username);
   }
 
   @Override
