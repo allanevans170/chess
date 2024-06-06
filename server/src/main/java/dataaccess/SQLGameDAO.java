@@ -60,6 +60,11 @@ public class SQLGameDAO extends SQLAccess implements GameDAO {
 
   @Override
   public void deleteAllGames() throws DataAccessException {
-
+    String statement = "DELETE FROM games";
+    try {
+      executeUpdate(statement);
+    } catch (DataAccessException e) {
+      throw new DataAccessException("Unable to delete games: " + e.getMessage());
+    }
   }
 }

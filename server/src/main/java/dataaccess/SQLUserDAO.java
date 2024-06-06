@@ -61,6 +61,11 @@ public class SQLUserDAO extends SQLAccess implements UserDAO {
 
   @Override
   public void deleteAllUsers() throws DataAccessException {
-
+    String statement = "DELETE FROM users";
+    try {
+      executeUpdate(statement);
+    } catch (DataAccessException e) {
+      throw new DataAccessException("Unable to delete users: " + e.getMessage());
+    }
   }
 }
