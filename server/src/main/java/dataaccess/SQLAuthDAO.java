@@ -41,7 +41,7 @@ public class SQLAuthDAO extends SQLAccess implements AuthDAO {
   @Override
   public Collection<AuthData> listAuths() throws DataAccessException {
     Collection<AuthData> result = new ArrayList<>();
-    String statement = "SELECT authToken, username FROM auth";
+    String statement = "SELECT authToken, username FROM auths";
     try (var conn = DatabaseManager.getConnection();
          PreparedStatement ps = conn.prepareStatement(statement)) {
       ResultSet rs = ps.executeQuery();

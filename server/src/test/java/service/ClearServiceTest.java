@@ -5,22 +5,22 @@ import static org.junit.jupiter.api.Assertions.*;
 import dataaccess.*;
 
 public class ClearServiceTest {
-  private MemoryAuthDAO memoryAuthDAO;
-  private MemoryGameDAO memoryGameDAO;
-  private MemoryUserDAO memoryUserDAO;
+  private SQLAuthDAO sqlAuthDAO;
+  private SQLGameDAO sqlGameDAO;
+  private SQLUserDAO sqlUserDAO;
   private ChessService clearService;
 
   @BeforeEach
   public void setUp() {
-    memoryAuthDAO = new MemoryAuthDAO();
-    memoryGameDAO = new MemoryGameDAO();
-    memoryUserDAO = new MemoryUserDAO();
-    clearService = new ChessService(memoryUserDAO, memoryAuthDAO, memoryGameDAO);
-
     try {
-      memoryAuthDAO.createAuth("yoloChessboi69");
-      memoryGameDAO.createGame("magnusVsHikaru");
-      memoryUserDAO.createUser("hikaruStickaru","magnus_stinks","hikaru@chess.com");
+      sqlAuthDAO = new SQLAuthDAO();
+      sqlGameDAO = new SQLGameDAO();
+      sqlUserDAO = new SQLUserDAO();
+      clearService = new ChessService(sqlUserDAO, sqlAuthDAO, sqlGameDAO);
+
+      sqlAuthDAO.createAuth("yoloChessboi69");
+      sqlGameDAO.createGame("magnusVsHikaru");
+      sqlUserDAO.createUser("hikaruStickaru","magnus_stinks","hikaru@chess.com");
     } catch (Exception e) {
       System.out.println("Error: "+e.getMessage());
     }
@@ -30,12 +30,12 @@ public class ClearServiceTest {
     try {
       clearService.clear();
 
-      assertEquals(0, memoryAuthDAO.listAuths().size(),"AuthDAO should be empty");
-      assertEquals(0, memoryGameDAO.listGames().size(),"GameDAO should be empty");
-      assertEquals(0, memoryUserDAO.listUsers().size(),"UserDAO should be empty");
+      assertEquals(0, sqlAuthDAO.listAuths().size(),"AuthDAO should be empty");
+      assertEquals(0, sqlGameDAO.listGames().size(),"GameDAO should be empty");
+      assertEquals(0, sqlUserDAO.listUsers().size(),"UserDAO should be empty");
 
     } catch (Exception e) {
-      System.out.println("Error: "+e.getMessage());
+      fail("Exception thrown during positveClear test: " + e.getMessage());
     }
   }
 }

@@ -1,10 +1,11 @@
 package dataaccess;
 
+import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.ChessService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DataAccessTests {
   private SQLAuthDAO sqlAuthDAO;
@@ -24,18 +25,19 @@ public class DataAccessTests {
   @Test
   public void positiveClear() {
     try {
-      ChessService clearService = new ChessService(sqlUserDAO, sqlAuthDAO, sqlGameDAO);
-
-      sqlUserDAO.createUser("goku","kamehameha","supersaiyan@gmail.com");
+      sqlUserDAO.createUser("goku", "kamehameha", "supersaiyan@gmail.com");
+      sqlAuthDAO.createAuth("goku");
       sqlGameDAO.createGame("gokuVsVegeta");
 
-      clearService.clear();
+      sqlAuthDAO.deleteAllAuths();
+      sqlUserDAO.deleteAllUsers();
+      sqlAuthDAO.deleteAllAuths();
 
-      assertEquals(0, sqlAuthDAO.listAuths().size(),"AuthDAO should be empty");
-      assertEquals(0, sqlGameDAO.listGames().size(),"GameDAO should be empty");
-      assertEquals(0, sqlUserDAO.listUsers().size(),"UserDAO should be empty");
+      assertTrue(sqlUserDAO.listUsers().isEmpty(), "Users table should be empty after clear operation");
+      assertTrue(sqlGameDAO.listGames().isEmpty(), "Games table should be empty after clear operation");
+      assertTrue(sqlAuthDAO.listAuths().isEmpty(), "Auths table should be empty after clear operation");
     } catch (Exception e) {
-      System.out.println("Error: "+e.getMessage());
+      fail("Exception thrown during positveClear test: " + e.getMessage());
     }
   }
 

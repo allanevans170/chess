@@ -64,7 +64,7 @@ public class GameServiceTests {
 
       assertEquals(1, chessService.getGameService().listGames(auth.authToken()).size(), "Should have 1 game");
       assertEquals("hikaru", memoryGameDAO.getGame(game.getGameID()).getBlackUsername());
-        assertEquals("magnus", memoryGameDAO.getGame(game.getGameID()).getWhiteUsername());
+      assertEquals("magnus", memoryGameDAO.getGame(game.getGameID()).getWhiteUsername());
     } catch (Exception e) {
       System.out.println("error: " + e.getMessage());
     }
