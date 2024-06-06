@@ -3,20 +3,27 @@ package server;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dataaccess.*;
-import model.AuthData;
-import model.GameData;
-import model.JoinGameRequest;
-import model.UserData;
+import model.*;
 import service.*;
 import spark.Request;
 import spark.Response;
-import service.ChessService;
 
 import java.util.Collection;
 import java.util.Map;
 
 public class Handlers {
-  private final ChessService chessService = new ChessService(new MemoryUserDAO(), new MemoryAuthDAO(), new MemoryGameDAO());
+  private final ChessService chessService;
+
+    public Handlers() {
+      try {
+        AuthDAO authDAO=new SQLAuthDAO();
+        UserDAO userDAO=new SQLUserDAO();
+        GameDAO gameDAO=new SQLGameDAO();
+        chessService = new ChessService(userDAO, authDAO, gameDAO);
+      } catch (DataAccessException e) {
+        throw new RuntimeException("Error: " + e.getMessage(), e);
+      }
+    }
 
   public Object registerHandler(Request req, Response res) {
     UserData user = new Gson().fromJson(req.body(), UserData.class);
