@@ -80,6 +80,9 @@ public class SQLGameDAO extends SQLAccess implements GameDAO {
   public void updateGame(GameData game) throws DataAccessException {
     String statement = "UPDATE games SET whiteUsername = ?, blackUsername = ?, gameName = ?, game = ? WHERE gameID = ?";
     String gameJson = new Gson().toJson(game.getGame());
+    if (getGame(game.getGameID()) == null) {
+      throw new DataAccessException("Game not found");
+    }
     executeUpdate(statement, game.getWhiteUsername(), game.getBlackUsername(), game.getGameName(), gameJson, game.getGameID());
   }
 

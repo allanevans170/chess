@@ -339,4 +339,36 @@ public class DataAccessTests {
       fail("Exception thrown during negativeGetGame test: " + e.getMessage());
     }
   }
+
+  @Test
+  public void positiveUpdateGame() {
+    try {
+      GameData game = sqlGameDAO.createGame("gokuVsPicolo");
+      game.setWhiteUsername("goku");
+      game.setBlackUsername("picolo");
+      sqlGameDAO.updateGame(game);
+
+      assertNotNull(game, "Game should not be null");
+      assertEquals(game.getGameName(), sqlGameDAO.getGame(game.getGameID()).getGameName(), "Game names should match");
+      assertEquals("goku", sqlGameDAO.getGame(game.getGameID()).getWhiteUsername(), "White username = goku");
+      assertEquals("picolo", sqlGameDAO.getGame(game.getGameID()).getBlackUsername(), "Black username = goku");
+
+    } catch (Exception e) {
+      fail("Exception thrown during positiveUpdateGame test: " + e.getMessage());
+    }
+  }
+
+  @Test
+  public void negativeUpdateGame() {  // set a game that doesn't exist
+    try {
+        GameData game = new GameData("gokuVsPicolo");
+        game.setGameID(1000);
+        game.setWhiteUsername("goku");
+        game.setBlackUsername("picolo");
+        sqlGameDAO.updateGame(game);
+        fail("Updating a game that does not exist should throw an exception");
+        } catch (Exception e) {
+        assertTrue(e.getMessage().contains("Game not found"), "Exception should be thrown because the game does not exist");
+    }
+  }
 }
