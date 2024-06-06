@@ -270,4 +270,73 @@ public class DataAccessTests {
       assertTrue(e.getMessage().contains("auth not found"), "Exception should be thrown because the token does not exist");
     }
   }
+
+  @Test
+  public void positiveCreateGame() {
+    try {
+      GameData game = sqlGameDAO.createGame("gokuVsPicolo");
+
+      GameData game2 = sqlGameDAO.getGame(game.getGameID());
+
+      assertNotNull(game2, "Game should not be null");
+      //assertEquals(game.getGame(), game2.getGame(), "Games should match");
+      assertEquals(game.getGameName(), game2.getGameName(), "Game names should match");
+      assertEquals(game.getWhiteUsername(), game2.getWhiteUsername(), "White usernames should match");
+      assertEquals(game.getGameID(), game2.getGameID(), "Game IDs should match");
+
+    } catch (Exception e) {
+      fail("Exception thrown during positiveCreateGame test: " + e.getMessage());
+    }
+  }
+
+  @Test
+  public void negativeCreateGame() {
+    try {
+      var conn=DatabaseManager.getConnection();
+      var statement=conn.createStatement();
+      statement.execute("DROP TABLE IF EXISTS games");
+      GameData game=sqlGameDAO.createGame("goku");
+      fail("Creating a game without game table should throw an exception");
+    } catch (Exception e) {
+      assertTrue(e.getMessage().contains("Game not created"), "Exception should be thrown because the table does not exist");
+    }
+    try {
+      var conn=DatabaseManager.getConnection();
+      var statement=conn.createStatement();
+      String tableCreate="CREATE TABLE IF NOT EXISTS games ( `gameID` INT NOT NULL AUTO_INCREMENT, `whiteUsername` VARCHAR(256) DEFAULT NULL, `blackUsername` VARCHAR(256) DEFAULT NULL, `gameName` VARCHAR(256) NOT NULL, `game` TEXT NOT NULL, PRIMARY KEY (`gameID`))";
+      statement.execute(tableCreate);
+    } catch (Exception e) {
+      fail("Failure to re-create table: " + e.getMessage());
+    }
+  }
+
+  @Test
+  public void positiveGetGame() {   // can I get a game that I created?
+    try {
+      GameData game = sqlGameDAO.createGame("gokuVsPicolo");
+      GameData game2 = sqlGameDAO.getGame(game.getGameID());
+
+      assertNotNull(game2, "Game should not be null");
+      //assertEquals(game.getGame(), game2.getGame(), "Games should match");
+      assertEquals(game.getGameName(), game2.getGameName(), "Game names should match");
+      assertEquals(game.getWhiteUsername(), game2.getWhiteUsername(), "White usernames should match");
+      assertEquals(game.getGameID(), game2.getGameID(), "Game IDs should match");
+
+    } catch (Exception e) {
+      fail("Exception thrown during positiveGetGame test: " + e.getMessage());
+    }
+  }
+
+  @Test
+  public void negativeGetGame() {
+    try {
+      GameData game = sqlGameDAO.createGame("gokuVsPicolo");
+      GameData game2 = sqlGameDAO.getGame(1000);
+
+      assertNull(game2, "Game should be null if it does not exist");
+
+    } catch (Exception e) {
+      fail("Exception thrown during negativeGetGame test: " + e.getMessage());
+    }
+  }
 }
