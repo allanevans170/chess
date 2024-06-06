@@ -39,9 +39,11 @@ public class GameService {
       }
 
       playerColor = playerColor.toUpperCase();
-      if ((!playerColor.equals("WHITE") && !playerColor.equals("BLACK")) ||   // incorrect player color
-              (gameDAO.getGame(gameID) == null))  {                           // game not found
+      if ((!playerColor.equals("WHITE") && !playerColor.equals("BLACK"))) {   // incorrect player color
         throw new ServiceException(401, "Error: bad request");
+      }
+      if ((gameDAO.getGame(gameID) == null))  {                              // game not found
+        throw new ServiceException(401, "Error: not found");
       }
       if (authDAO.getAuth(authToken) == null) {
         throw new ServiceException(401, "Error: unauthorized");               // unauthorized, no authToken

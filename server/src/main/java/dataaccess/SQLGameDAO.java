@@ -19,10 +19,10 @@ public class SQLGameDAO extends SQLAccess implements GameDAO {
   public GameData createGame(String gameName) throws DataAccessException {
     GameData game = new GameData(gameName);                                     // creation of AuthData object
     String gameJson = new Gson().toJson(game.getGame());                        // converting AuthData object to JSON
-    String statement = "INSERT INTO games (gameID, gameName, game) VALUES (?, ?, ?)";
+    String statement = "INSERT INTO games (gameName, game) VALUES (?, ?)";
     // usernames null by default
     try {
-      int gameID=executeUpdate(statement, game.getGameID(), game.getGameName(), gameJson);
+      int gameID=executeUpdate(statement, game.getGameName(), gameJson);
       game.setGameID(gameID);
     } catch (DataAccessException e) {
       throw new DataAccessException("Game not created");
@@ -32,7 +32,7 @@ public class SQLGameDAO extends SQLAccess implements GameDAO {
 
   @Override
   public GameData getGame(int gameID) throws DataAccessException {
-    String statement = "SELECT gameID, gameName, game FROM games WHERE gameID = ?";
+    String statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID = ?";
     try (var conn = DatabaseManager.getConnection();
          var ps = conn.prepareStatement(statement)) {
       ps.setInt(1, gameID);
