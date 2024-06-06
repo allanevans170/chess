@@ -54,14 +54,11 @@ public class UserServiceTests {
   @Test
   public void positiveLogin() {
     try {
-      userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
-      //assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
-      //assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
+      AuthData auth1 = userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
+      AuthData auth2 = userService.login(new UserData("hikaru","magnus_stinks", ""));
 
-      userService.login(new UserData("hikaru","magnus_stinks", ""));
-      //assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auth");
-      //assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
-
+      assertTrue(sqlAuthDAO.getAuth(auth1.authToken()).username() == "hikaru", "auth1 associates with hikaru");
+      assertTrue(sqlAuthDAO.getAuth(auth2.authToken()).username() == "hikaru", "auth2 associates with hikaru after login");
     } catch (Exception e) {
       System.out.println("error: "+e.getMessage());
     }
@@ -87,14 +84,14 @@ public class UserServiceTests {
       AuthData auth1 = userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
       AuthData auth2 = userService.login(new UserData("hikaru","magnus_stinks",""));
 
-      //assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auths");
-      //assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
+      assertTrue(sqlAuthDAO.getAuth(auth1.authToken()).username() == "hikaru", "auth1 associates with hikaru");
+      assertTrue(sqlAuthDAO.getAuth(auth2.authToken()).username() == "hikaru", "auth2 associates with hikaru after login");
 
       userService.logout(auth1.authToken());
-      //assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auths");
+      assertNull(sqlAuthDAO.getAuth(auth1.authToken()), "Should return null");
       userService.logout(auth2.authToken());
-      //assertEquals(0, memoryAuthDAO.listAuths().size(),"AuthDAO should have 0 auths");
-      //assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
+      assertNull(sqlAuthDAO.getAuth(auth1.authToken()), "Should return null");
+      assertTrue(sqlUserDAO.getUser("hikaru").email() == "hikaru@chess.com", "Should return hikaru's emai - user still exists");
 
     } catch (Exception e) {
       System.out.println("error: "+e.getMessage());
