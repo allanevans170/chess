@@ -4,11 +4,15 @@ import java.sql.SQLException;
 import com.google.gson.Gson;
 import chess.ChessGame;
 
-import java.sql.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
 public class SQLAccess {
+
+  public SQLAccess() throws DataAccessException {
+    configureDatabase();
+  }
+
   public int executeUpdate(String statement, Object... params) throws DataAccessException {
     try (var conn = DatabaseManager.getConnection()) {
       try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
@@ -36,27 +40,29 @@ public class SQLAccess {
 
   private final String[] createStatements = {
           """
-            CREATE TABLE IF NOT EXISTS  users (
+            CREATE TABLE IF NOT EXISTS  auths (
               `authToken` varchar(256) NOT NULL,
               `username` varchar(256) NOT NULL,
-              PRIMARY KEY (`authToken`),
+              PRIMARY KEY (`authToken`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-            
+          """,
+          """
             CREATE TABLE IF NOT EXISTS users (
                `username` VARCHAR(256) NOT NULL,
                `password` VARCHAR(256) NOT NULL,
                `email` VARCHAR(256) NOT NULL,
                PRIMARY KEY (`username`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-            
+            ) 
+          """,
+          """
             CREATE TABLE IF NOT EXISTS games (
               `gameID` INT NOT NULL AUTO_INCREMENT,
               `whiteUsername` VARCHAR(256) DEFAULT NULL,
               `blackUsername` VARCHAR(256) DEFAULT NULL,
               `gameName` VARCHAR(256) NOT NULL,
-              `game` TEXT DEFAULT NULL,
+              `game` TEXT NOT NULL,
               PRIMARY KEY (`gameID`)
-              ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+              ) 
             """
   };
   public void configureDatabase() throws DataAccessException {
