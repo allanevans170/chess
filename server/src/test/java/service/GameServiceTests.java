@@ -6,17 +6,21 @@ import java.util.Collection;
 import dataaccess.*;
 import model.*;
 public class GameServiceTests {
-  private MemoryAuthDAO memoryAuthDAO;
-  private MemoryUserDAO memoryUserDAO;
-  private MemoryGameDAO memoryGameDAO;
+  private SQLAuthDAO sqlAuthDAO;
+  private SQLUserDAO sqlUserDAO;
+  private SQLGameDAO sqlGameDAO;
   private ChessService chessService;
 
   @BeforeEach
   public void setUp() {
-    memoryAuthDAO = new MemoryAuthDAO();
-    memoryUserDAO = new MemoryUserDAO();
-    memoryGameDAO = new MemoryGameDAO();
-    chessService = new ChessService(memoryUserDAO, memoryAuthDAO, memoryGameDAO);
+    try {
+      sqlAuthDAO = new SQLAuthDAO();
+      sqlUserDAO = new SQLUserDAO();
+      sqlGameDAO = new SQLGameDAO();
+      chessService = new ChessService(sqlUserDAO, sqlAuthDAO, sqlGameDAO);
+    } catch (Exception e) {
+      System.out.println("Error: "+e.getMessage());
+    }
   }
 
   @Test
@@ -24,12 +28,12 @@ public class GameServiceTests {
     try {
       AuthData auth = chessService.getUserService().register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
 
-      assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
-      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
+      assertTrue(sqlAuthDAO.getAuth(auth.authToken()) != null, "Should not return null");
+      assertTrue(sqlUserDAO.getUser("hikaru") != null, "Should not return null");
 
       GameData game = chessService.getGameService().createGame(auth.authToken(), "magnusVsHikaru");
 
-      assertEquals(1, memoryGameDAO.listGames().size(),"GameDAO should have 1 game");
+      assertEquals(1, sqlGameDAO.listGames().size(),"GameDAO should have 1 game");
       assertEquals("magnusVsHikaru", game.getGameName());
 
     } catch (Exception e) {
@@ -42,8 +46,8 @@ public class GameServiceTests {
     try {
       AuthData auth = chessService.getUserService().register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
 
-      assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
-      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
+      assertTrue(sqlAuthDAO.getAuth(auth.authToken()) != null, "Should not return null");
+      assertTrue(sqlUserDAO.getUser("hikaru") != null, "Should not return null");
 
       GameData game = chessService.getGameService().createGame("Billy'sFalseToken", "magnusVsHikaru");
       fail("Should have thrown an exception");
@@ -63,8 +67,8 @@ public class GameServiceTests {
       chessService.getGameService().joinGame(auth.authToken(), "BLACK", game.getGameID());  // hikaru joins as black
 
       assertEquals(1, chessService.getGameService().listGames(auth.authToken()).size(), "Should have 1 game");
-      assertEquals("hikaru", memoryGameDAO.getGame(game.getGameID()).getBlackUsername());
-      assertEquals("magnus", memoryGameDAO.getGame(game.getGameID()).getWhiteUsername());
+      assertEquals("hikaru", sqlGameDAO.getGame(game.getGameID()).getBlackUsername());
+      assertEquals("magnus", sqlGameDAO.getGame(game.getGameID()).getWhiteUsername());
     } catch (Exception e) {
       System.out.println("error: " + e.getMessage());
     }
