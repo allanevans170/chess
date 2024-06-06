@@ -1,16 +1,12 @@
 package dataaccess;
 
-import model.UserData;
+import model.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mindrot.jbcrypt.BCrypt;
-import service.ChessService;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,16 +41,16 @@ public class DataAccessTests {
   public void positiveClear() {
     try {
       sqlUserDAO.createUser("goku", "kamehameha", "supersaiyan@gmail.com");
-      sqlAuthDAO.createAuth("goku");
+      AuthData auth = sqlAuthDAO.createAuth("goku");
       sqlGameDAO.createGame("gokuVsVegeta");
 
       sqlAuthDAO.deleteAllAuths();
       sqlUserDAO.deleteAllUsers();
       sqlGameDAO.deleteAllGames();
 
-      assertTrue(sqlUserDAO.listUsers().isEmpty(), "Users table should be empty after clear operation");
+      assertNull(sqlAuthDAO.getAuth(auth.authToken()), "Should return null");
+      assertNull(sqlUserDAO.getUser("goku"), "Should return null");
       assertTrue(sqlGameDAO.listGames().isEmpty(), "Games table should be empty after clear operation");
-      assertTrue(sqlAuthDAO.listAuths().isEmpty(), "Auths table should be empty after clear operation");
     } catch (Exception e) {
       fail("Exception thrown during positveClear test: " + e.getMessage());
     }
@@ -93,7 +89,7 @@ public class DataAccessTests {
       assertEquals(email, user.email(), "Email should match the expected value");
 
     } catch (Exception e) {
-      fail("Exception thrown during positiveRegisterUser test: " + e.getMessage());
+      fail("Exception thrown during positiveCreateUser test: " + e.getMessage());
     }
   }
 
@@ -107,13 +103,22 @@ public class DataAccessTests {
       // Create the first user
       sqlUserDAO.createUser(username, password, email);
 
-      // Attempt to create another user with the same username
       assertThrows(DataAccessException.class, () -> {
         sqlUserDAO.createUser(username, "differentPassword", "differentEmail@gmail.com");
       }, "Creating a user with a duplicate username should throw a DataAccessException");
 
     } catch (Exception e) {
-      fail("Exception thrown during negativeRegisterUser_DuplicateUsername test: " + e.getMessage());
+      fail("Exception thrown during negativeCreateUser test: " + e.getMessage());
+    }
+  }
+
+  @Test
+  public void negativeListGames() {   //
+    try {
+      Collection<GameData> gameList = sqlGameDAO.listGames();
+      assertEquals(0, gameList.size(), "User list should be empty");
+    } catch (DataAccessException e) {
+      fail("Exception thrown during negativeListGames test: " + e.getMessage());
     }
   }
 }

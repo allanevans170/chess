@@ -30,9 +30,9 @@ public class ClearServiceTest {
     try {
       clearService.clear();
 
-      assertEquals(0, sqlAuthDAO.listAuths().size(),"AuthDAO should be empty");
+      assertNull(sqlAuthDAO.getAuth("yoloChessboi69"), "Should return null");
+      assertNull(sqlUserDAO.getUser("HikaruStickaru"), "Should return null");
       assertEquals(0, sqlGameDAO.listGames().size(),"GameDAO should be empty");
-      assertEquals(0, sqlUserDAO.listUsers().size(),"UserDAO should be empty");
 
     } catch (Exception e) {
       fail("Exception thrown during positveClear test: " + e.getMessage());

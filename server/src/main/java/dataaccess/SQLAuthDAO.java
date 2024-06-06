@@ -38,21 +38,7 @@ public class SQLAuthDAO extends SQLAccess implements AuthDAO {
     }
     return null; // if no auth is found
   }
-  @Override
-  public Collection<AuthData> listAuths() throws DataAccessException {
-    Collection<AuthData> result = new ArrayList<>();
-    String statement = "SELECT authToken, username FROM auths";
-    try (var conn = DatabaseManager.getConnection();
-         PreparedStatement ps = conn.prepareStatement(statement)) {
-      ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
-        result.add(readAuth(rs));
-      }
-    } catch (Exception e) {
-      throw new DataAccessException("Unable to list auths: " + e.getMessage());
-    }
-    return result;
-  }
+
 
   private AuthData readAuth(ResultSet rs) throws SQLException {
     String username = rs.getString("username");

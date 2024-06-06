@@ -15,12 +15,6 @@ public class MemoryAuthDAO implements AuthDAO {
     return auth;
   }
 
-
-  @Override
-  public Collection<AuthData> listAuths() throws DataAccessException {
-    return auths.values();
-  }
-
   @Override
   public AuthData getAuth(String authToken) throws DataAccessException {
     return auths.get(authToken);

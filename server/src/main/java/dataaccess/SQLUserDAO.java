@@ -21,22 +21,6 @@ public class SQLUserDAO extends SQLAccess implements UserDAO {
   }
 
   @Override
-  public Collection<UserData> listUsers() throws DataAccessException {
-    Collection<UserData> result = new ArrayList<>();
-    String statement = "SELECT username, password, email FROM users";
-    try (var conn = DatabaseManager.getConnection();
-         var ps = conn.prepareStatement(statement)) {
-      var rs = ps.executeQuery();
-      while (rs.next()) {
-        result.add(readUser(rs));
-      }
-    } catch (Exception e) {
-      throw new DataAccessException("Unable to list users: " + e.getMessage());
-    }
-    return result;
-  }
-
-  @Override
   public UserData getUser(String username) throws DataAccessException {
     String statement = "SELECT username, password, email FROM users WHERE username = ?";
 

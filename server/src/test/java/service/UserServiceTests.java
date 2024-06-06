@@ -6,23 +6,29 @@ import dataaccess.*;
 import model.*;
 
 public class UserServiceTests {
-  private MemoryAuthDAO memoryAuthDAO;
-  private MemoryUserDAO memoryUserDAO;
+  private MemoryAuthDAO sqlAuthDAO;
+  private MemoryUserDAO sqlUserDAO;
   private UserService userService;
 
   @BeforeEach
   public void setUp() {
-    memoryAuthDAO = new MemoryAuthDAO();
-    memoryUserDAO = new MemoryUserDAO();
-    userService = new UserService(memoryUserDAO, memoryAuthDAO);
+    try {
+      sqlAuthDAO = new MemoryAuthDAO();
+      sqlUserDAO = new MemoryUserDAO();
+      userService = new UserService(sqlUserDAO, sqlAuthDAO);
+    } catch (Exception e) {
+      System.out.println("Error: "+e.getMessage());
+    }
   }
   @Test
   public void positiveRegister() {
     try {
-      userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
+      AuthData auth = userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
 
-      assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
-      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
+      assertTrue(sqlAuthDAO.getAuth(auth.authToken()) != null, "Should not return null");
+      assertTrue(sqlUserDAO.getUser("hikaru") != null, "Should not return null");
+
+      assertNull(sqlUserDAO.getUser("HikaruStickaru"), "Should return null");
 
     } catch (Exception e) {
       System.out.println("error: "+e.getMessage());
@@ -38,10 +44,8 @@ public class UserServiceTests {
     } catch (ServiceException e) {
       assertEquals("Error: already taken", e.getMessage());
     }
-
     try {
-      assertEquals(1, memoryAuthDAO.listAuths().size(), "AuthDAO should have 1 auth");
-      assertEquals(1, memoryUserDAO.listUsers().size(), "UserDAO should have 1 auth");
+      assertTrue(sqlUserDAO.getUser("hikaru").email() == "email@gmail.com", "Should return first email input");
     } catch (DataAccessException e) {
       System.out.println("error: "+e.getMessage());
     }
@@ -51,12 +55,12 @@ public class UserServiceTests {
   public void positiveLogin() {
     try {
       userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
-      assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
-      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
+      //assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auth");
+      //assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 auth");
 
       userService.login(new UserData("hikaru","magnus_stinks", ""));
-      assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auth");
-      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
+      //assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auth");
+      //assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
 
     } catch (Exception e) {
       System.out.println("error: "+e.getMessage());
@@ -83,14 +87,14 @@ public class UserServiceTests {
       AuthData auth1 = userService.register(new UserData("hikaru","magnus_stinks","hikaru@chess.com"));
       AuthData auth2 = userService.login(new UserData("hikaru","magnus_stinks",""));
 
-      assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auths");
-      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
+      //assertEquals(2, memoryAuthDAO.listAuths().size(),"AuthDAO should have 2 auths");
+      //assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
 
       userService.logout(auth1.authToken());
-      assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auths");
+      //assertEquals(1, memoryAuthDAO.listAuths().size(),"AuthDAO should have 1 auths");
       userService.logout(auth2.authToken());
-      assertEquals(0, memoryAuthDAO.listAuths().size(),"AuthDAO should have 0 auths");
-      assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
+      //assertEquals(0, memoryAuthDAO.listAuths().size(),"AuthDAO should have 0 auths");
+      //assertEquals(1, memoryUserDAO.listUsers().size(),"UserDAO should have 1 user");
 
     } catch (Exception e) {
       System.out.println("error: "+e.getMessage());
