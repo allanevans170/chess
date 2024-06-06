@@ -5,8 +5,10 @@ import model.AuthData;
 import model.GameData;
 
 import javax.xml.crypto.Data;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class SQLGameDAO extends SQLAccess implements GameDAO {
@@ -46,16 +48,39 @@ public class SQLGameDAO extends SQLAccess implements GameDAO {
 
   @Override
   public Collection<GameData> listGames() throws DataAccessException {
-    return null;
+    Collection<GameData> result = new ArrayList<>();
+    String statement = "SELECT gameID, whiteUsername, blackUsername, gameName FROM games";
+
+    try (var conn = DatabaseManager.getConnection();
+         PreparedStatement ps = conn.prepareStatement(statement)) {
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        result.add(readGame(rs));
+      }
+    } catch (Exception e) {
+      throw new DataAccessException("Unable to list games: " + e.getMessage());
+    }
+    return result;
   }
 
   private GameData readGame(ResultSet rs) throws SQLException {
+    int gameID = rs.getInt("gameID");
+    String whiteUsername = rs.getString("whiteUsername");
+    String blackUsername = rs.getString("blackUsername");
     String gameName = rs.getString("gameName");
 
     GameData game = new GameData(gameName);
-    game.setGameID(rs.getInt("gameID"));
+    game.setGameID(gameID);
+    game.setWhiteUsername(whiteUsername);
+    game.setBlackUsername(blackUsername);
     //game.setGame(new Gson().fromJson(rs.getString("game"), GameData.class));
     return game;
+  }
+
+  public void updateGame(GameData game) throws DataAccessException {
+    String statement = "UPDATE games SET whiteUsername = ?, blackUsername = ?, gameName = ?, game = ? WHERE gameID = ?";
+    String gameJson = new Gson().toJson(game.getGame());
+    executeUpdate(statement, game.getWhiteUsername(), game.getBlackUsername(), game.getGameName(), gameJson, game.getGameID());
   }
 
   @Override

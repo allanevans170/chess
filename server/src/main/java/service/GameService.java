@@ -59,6 +59,7 @@ public class GameService {
       } else if (playerColor.equals("BLACK")) {
         game.setBlackUsername(authenticated.username());
       }
+      gameDAO.updateGame(game);
       return game;
     } catch (DataAccessException e) {
       throw new ServiceException(500, "Error: "+e.getMessage());

@@ -31,14 +31,13 @@ public class MemoryGameDAO implements GameDAO {
     return games.values();
   }
 
-//  @Override
-//  public GameData updateGame(GameData game) throws DataAccessException {
-//    if (games.get(game.getGameID()) == null) {
-//      throw new DataAccessException("Game not found");
-//    }
-//    games.put(game.getGameID(), game);
-//    return game;
-//  }
+@Override
+public void updateGame(GameData game) throws DataAccessException {
+    if (games.get(game.getGameID()) == null) {
+      throw new DataAccessException("Game not found");
+    }
+    games.put(game.getGameID(), game);
+  }
 
   @Override
   public void deleteAllGames() throws DataAccessException {
