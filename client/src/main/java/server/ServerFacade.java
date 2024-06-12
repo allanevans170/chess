@@ -1,7 +1,6 @@
 package server;
 
 import com.google.gson.Gson;
-import model.*;
 
 import java.io.*;
 import java.net.*;
@@ -12,10 +11,10 @@ public class ServerFacade {
     serverUrl = url;
   }
 
-  public void help() throws ServerFacadeException {
-    var path = "/help";
-    return this.makeRequest("POST", path);
-  }
+//  public void help() throws ServerFacadeException {
+//    var path = "/help";
+//    return this.makeRequest("POST", path);
+//  }
   private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ServerFacadeException {
     try {
       URL url = (new URI(serverUrl + path)).toURL();
