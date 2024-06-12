@@ -1,7 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
-
+import model.*;
 import java.io.*;
 import java.net.*;
 
@@ -11,10 +11,20 @@ public class ServerFacade {
     serverUrl = url;
   }
 
-//  public void help() throws ServerFacadeException {
-//    var path = "/help";
-//    return this.makeRequest("POST", path);
+  public AuthData register(UserData user) throws ServerFacadeException {
+    return makeRequest("POST", "/user", user, AuthData.class);
+  }
+  public AuthData login(UserData user) throws ServerFacadeException {
+      return makeRequest("POST", "/session", user, AuthData.class);
+  }
+  public void logout(String authToken) throws ServerFacadeException {
+    makeRequest("DELETE", "/session", authToken, null);
+  }
+//  public Collection<GameData> listGames(String authToken) throws ServerFacadeException {
+//    return makeRequest("GET", "/game", authToken, )
 //  }
+
+  //public
   private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ServerFacadeException {
     try {
       URL url = (new URI(serverUrl + path)).toURL();

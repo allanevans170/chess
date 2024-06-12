@@ -3,6 +3,8 @@ package client;
 import chess.ChessGame;
 import chess.ChessPiece;
 import com.google.gson.Gson;
+import model.AuthData;
+import model.UserData;
 import server.ServerFacade;
 import server.ServerFacadeException;
 
@@ -19,11 +21,11 @@ public class ChessClient {
   private static final String ESCAPE = "\u001b[";
   public static final String GREEN = ESCAPE + "32m";
   public static final String RESET = ESCAPE + "0m";
-  private final ServerFacade server;
+  private final ServerFacade serverFacade;
   private final String serverUrl;
 
   public ChessClient(String serverUrl) {
-    server = new ServerFacade(serverUrl);
+    serverFacade = new ServerFacade(serverUrl);
     this.serverUrl = serverUrl;
   }
 //  public static void main(String[] args) throws Exception {
@@ -73,15 +75,21 @@ public class ChessClient {
     System.out.print("Goodbye!  ");
     return "quit";
   }
-  public static String registration(String... params) throws ClientException {
+  public String registration(String... params) throws ClientException {
     if (params.length >= 1) {
       String username = params[0];
       String password = params[1];
       String userEmail = params[2];
-      String visitorName = username;
-      return String.format("You created the account: %s.\n", visitorName);
+      UserData newUser = new UserData(username, password, userEmail);
+      try {
+        AuthData output = serverFacade.register(newUser);
+        System.out.println(output.toString());
+      } catch (ServerFacadeException e) {
+        throw new ClientException(e.getStatusCode(), e.getMessage());
+      }
+      return String.format("You created the account: %s.\n", newUser.username());
     }
-    throw new ClientException(400, "Expected: registration <username> <password> <email>");
+    throw new ClientException(400, "Expected: registration <username> <password> <email>\n");
   }
 
   public static String login(String... params) throws ClientException {

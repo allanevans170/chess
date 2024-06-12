@@ -22,9 +22,9 @@ public class Repl {
 
       try {
         result = client.preLogin(line);
-        System.out.print(result);
+        System.out.println(result);
       } catch (Throwable e) {
-        System.out.print(e.toString());
+        System.out.println(e.toString());
       }
     }
     System.out.println();
