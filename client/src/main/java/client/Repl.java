@@ -21,7 +21,7 @@ public class Repl {
       String line = scanner.nextLine();
 
       try {
-        result = client.eval(line);
+        result = client.preLogin(line);
         System.out.print(result);
       } catch (Throwable e) {
         System.out.print(e.toString());

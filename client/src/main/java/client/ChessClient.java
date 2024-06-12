@@ -4,6 +4,7 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import com.google.gson.Gson;
 import server.ServerFacade;
+import server.ServerFacadeException;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,11 +26,9 @@ public class ChessClient {
     server = new ServerFacade(serverUrl);
     this.serverUrl = serverUrl;
   }
-  public static void main(String[] args) throws Exception {
-    System.out.println("♕ 240 Chess Client ♕\nType help for a list of commands\n");
-    preLogin();
-
-
+//  public static void main(String[] args) throws Exception {
+//    System.out.println("♕ 240 Chess Client ♕\nType help for a list of commands\n");
+//    preLogin();
 //      preLogin();
 //      System.out.println(response);
 //      // parse user input
@@ -51,45 +50,45 @@ public class ChessClient {
 //      InputStreamReader inputStreamReader = new InputStreamReader(respBody);
 //      System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
 //    }
-  }
 
-  public static String preLogin() {
-    boolean quit = false;
-    Scanner scanner = new Scanner(System.in);
-    //String line = scanner.nextLine();
-    //var numbers = line.split(" ");
-
-    while (!quit) {
-      System.out.print("\n" + RESET + ">>> " + GREEN);
-      String input = scanner.nextLine();
+  public String preLogin(String input) {
+    try {
       var tokens = input.toLowerCase().split(" ");
       var cmd = (tokens.length > 0) ? tokens[0] : "help";
       var params = Arrays.copyOfRange(tokens, 1, tokens.length);
-      return switch(cmd) {
-        case "help" -> help();
-        case "register" -> registration();
-        case "login" -> "login";
-        case "quit" -> {
-          quit = true;
-          yield "Goodbye!";
-        }
-        default -> "help";
+      return switch (cmd) {
+        case "register" -> registration(params);
+        case "login" -> login(params);
+        case "quit" -> "Goodbye!\n";
+        default -> help();
       };
+    } catch (Exception ex) {  // what kind of exception???
+      return ex.getMessage();
     }
-    return " ... \n";
+  }
+  public static String registration(String... params) {
+    //System.out.println("Registration");
+    return "registration\n";
+  }
+  public static String login(String... params) {
+    if (params.length >= 1) {
+      state = State.SIGNEDIN;
+      visitorName = String.join("-", params);
+      ws = new WebSocketFacade(serverUrl, notificationHandler);
+      ws.enterPetShop(visitorName);
+      return String.format("You signed in as %s.", visitorName);
+    }
+    throw new ClientException(400, "Expected: <yourname>");
+    //return "login\n";
   }
 
-  public String evaluateInput(String input) {}
-
-  public static String registration() {
-    return "registration";
-  }
-
-  public static void help() {
-    System.out.println("Help - provides possible commands");
-    System.out.println("Register <USERNAME> <PASSWORD> <EMAIL> - create an account");
-    System.out.println("Login <USERNAME> <PASSWORD> - to play chess");
-    System.out.println("Quit - exit the program");
+  public static String help() {
+    return """
+        Help - provides possible commands
+        Register <USERNAME> <PASSWORD> <EMAIL> - create an account
+        Login <USERNAME> <PASSWORD> - to play chess
+        Quit - exit the program
+        """;
   }
 
 
