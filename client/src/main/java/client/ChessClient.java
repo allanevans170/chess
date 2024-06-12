@@ -3,6 +3,7 @@ package client;
 import chess.ChessGame;
 import chess.ChessPiece;
 import com.google.gson.Gson;
+import server.ServerFacade;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,6 +18,13 @@ public class ChessClient {
   private static final String ESCAPE = "\u001b[";
   public static final String GREEN = ESCAPE + "32m";
   public static final String RESET = ESCAPE + "0m";
+  private final ServerFacade server;
+  private final String serverUrl;
+
+  public ChessClient(String serverUrl) {
+    server = new ServerFacade(serverUrl);
+    this.serverUrl = serverUrl;
+  }
   public static void main(String[] args) throws Exception {
     System.out.println("♕ 240 Chess Client ♕\nType help for a list of commands\n");
     preLogin();
@@ -57,23 +65,16 @@ public class ChessClient {
       var tokens = input.toLowerCase().split(" ");
       var cmd = (tokens.length > 0) ? tokens[0] : "help";
       var params = Arrays.copyOfRange(tokens, 1, tokens.length);
-      return switch()
-      if (input.equals("help")) {
-        help();
-        System.out.println(" - - - \n");
-      }
-      if (input.equals("register")) {
-        System.out.println("registration...");
-        //return registration();
-      }
-      if (input.equals("login")) {
-        System.out.println("login...");
-      }
-      if (input.equals("quit")) {
-        quit = true;
-        System.out.println("Goodbye!");
-      }
-      System.out.println("looping...");
+      return switch(cmd) {
+        case "help" -> help();
+        case "register" -> registration();
+        case "login" -> "login";
+        case "quit" -> {
+          quit = true;
+          yield "Goodbye!";
+        }
+        default -> "help";
+      };
     }
     return " ... \n";
   }
