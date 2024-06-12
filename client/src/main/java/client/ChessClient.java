@@ -59,27 +59,39 @@ public class ChessClient {
       return switch (cmd) {
         case "register" -> registration(params);
         case "login" -> login(params);
-        case "quit" -> "Goodbye!\n";
+        case "quit" -> quit();
         default -> help();
       };
-    } catch (Exception ex) {  // what kind of exception???
+    } catch (ClientException ex) {  // what kind of exception???
       return ex.getMessage();
     }
   }
-  public static String registration(String... params) {
-    //System.out.println("Registration");
-    return "registration\n";
+  public String postLogin(String input) {
+    return "postLogin";
   }
-  public static String login(String... params) {
+  public static String quit() {
+    System.out.print("Goodbye!  ");
+    return "quit";
+  }
+  public static String registration(String... params) throws ClientException {
     if (params.length >= 1) {
-      state = State.SIGNEDIN;
-      visitorName = String.join("-", params);
-      ws = new WebSocketFacade(serverUrl, notificationHandler);
-      ws.enterPetShop(visitorName);
-      return String.format("You signed in as %s.", visitorName);
+      String username = params[0];
+      String password = params[1];
+      String userEmail = params[2];
+      String visitorName = username;
+      return String.format("You created the account: %s.\n", visitorName);
     }
-    throw new ClientException(400, "Expected: <yourname>");
-    //return "login\n";
+    throw new ClientException(400, "Expected: registration <username> <password> <email>");
+  }
+
+  public static String login(String... params) throws ClientException {
+    if (params.length >= 1) {
+      String username = params[0];
+      String password = params[1];
+      String visitorName = username;
+      return String.format("You signed in as %s.\n", visitorName);
+    }
+    throw new ClientException(400, "Expected: login <username> <password>");
   }
 
   public static String help() {
