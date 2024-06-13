@@ -20,6 +20,13 @@ public class ServerFacade {
   public void logout(String authToken) throws ServerFacadeException {
     makeRequest("DELETE", "/session", authToken, null);
   }
+  public void clear() throws ServerFacadeException {
+    makeRequest("DELETE", "/db", null, null);
+  }
+
+//  public void createGame(String authToken, String gameName) throws ServerFacadeException {
+//      makeRequest("POST", "/game", authToken, null);
+//  }
 //  public Collection<GameData> listGames(String authToken) throws ServerFacadeException {
 //    return makeRequest("GET", "/game", authToken, )
 //  }

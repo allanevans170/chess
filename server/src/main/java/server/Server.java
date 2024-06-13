@@ -43,6 +43,7 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+
     private Object throwError(Request req, Response res) {
         throw new RuntimeException("Server on fire");
     }
