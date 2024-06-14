@@ -76,13 +76,7 @@ public class ChessClient {
       return ex.getMessage();
     }
   }
-  public void clear() throws ClientException {
-    try {
-      serverFacade.clear();
-    } catch (ServerFacadeException e) {
-      throw new ClientException(e.getStatusCode(), e.getMessage());
-    }
-  }
+
   public static String quit() {
     System.out.print("Goodbye!  ");
     return "quit";
@@ -157,6 +151,7 @@ public class ChessClient {
   public String logout() throws ClientException {
     try {
       serverFacade.logout(authToken);
+      authToken = null;
       currentStatus = status.PRE_LOGIN;
       return ("You've signed out.\n");
     } catch (ServerFacadeException e) {

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import server.Server;
 import server.ServerFacade;
 import model.*;
+import server.ServerFacadeException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +25,6 @@ public class ServerFacadeTests {
     @BeforeEach
     public void setup() {
         // Clear the database
-        //makeRequest("DELETE", "/db", null, null);    }
         try {
             serverFacade.clear();
         } catch (Exception e) {
@@ -39,12 +39,6 @@ public class ServerFacadeTests {
     @Test
     public void positiveRegister() {
         System.out.println("positiveRegister test");
-        // test positive registration by creating a new account
-        //var result = assertDoesNotThrow(() -> client.preLogin("register magnus password8 magnus@gmail.com"));
-        //assertTrue(result.equals("You created the account: magnus\n"));
-
-        //result = assertDoesNotThrow(() -> client.preLogin("register hikaru pass99 magnus@gmail.com"));
-        //assertTrue(result.equals("You created the account: hikaru\n"));
         UserData testUser = new UserData("magnus", "password8", "email@gmail.com");
         AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
         assertTrue(result.authToken().length() > 10);
@@ -54,48 +48,77 @@ public class ServerFacadeTests {
     @Test
     public void negativeRegister() {
         System.out.println("negativeRegister test");
-        // test negative registration by creating an account with the same username
-//        var result = assertDoesNotThrow(() -> client.preLogin("register magnus password8 magnus@gmail.com"));
-//        assertTrue(result.equals("You created the account: magnus\n"));
-//
-//        result = assertDoesNotThrow(() -> client.preLogin("register magnus pass99 magnus@gmail.com"));
-//        assertTrue(result.equals("failure: 403"));
-        UserData testUser = new UserData("magnus", "password8", "email@gmail.com");
-        AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
-
-        assertTrue(result.authToken().length() > 10);
-        assertTrue(result.username().equals("magnus"));
+        try {
+            UserData testUser = new UserData("magnus", "password8", "email@gmail.com");
+            AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
+            UserData duplicateUser = new UserData("magnus", "other_pass", "email@random.com");
+            AuthData result2 = serverFacade.register(duplicateUser);
+            fail("Expected ServerFacadeException");
+        } catch(ServerFacadeException e) {
+            assertTrue(e.getMessage().equals("failure: 403"));
+        }
     }
 
     @Test
     public void positiveLogin() {
         System.out.println("positiveLogin test");
-        // test positive login by logging in with a valid account
-//        client.preLogin("register magnus password8 magnus@gmail.com");
-//        var result = assertDoesNotThrow(() -> client.preLogin("login magnus password8"));
-//        assertTrue(result.equals("You signed in as magnus\n"));
+        UserData testUser = new UserData("magnus", "password8", "email@gmail.com");
+        AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
+        assertDoesNotThrow(() -> serverFacade.logout(result.authToken()));
+
+        UserData testUserLogin = new UserData("magnus", "password8", "");
+        AuthData result2 = assertDoesNotThrow(() -> serverFacade.login(testUser));
+        assertTrue(result.authToken().length() > 10);
+        assertTrue(result.username().equals("magnus"));
     }
 
     @Test
     public void negativeLogin() {
-        System.out.println("negativeLogin test");
-        // test negative login by logging in with an incorrect password
-        client.preLogin("register magnus password8 magnus@gmail.com");
-        var result = client.preLogin("login magnus wrongpassword");
-        assertTrue(result.equals("failure: 401"));
+        System.out.println("negativeLogin test - wrong password");
+        UserData testUser = new UserData("magnus", "password8", "email@gmail.com");
+        AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
+        assertDoesNotThrow(() -> serverFacade.logout(result.authToken()));
+
+        UserData testUserLogin = new UserData("magnus", "password9", "");
+        try {
+            AuthData result2 = serverFacade.login(testUserLogin);
+            fail("Expected ServerFacadeException - wrong password");
+        } catch(ServerFacadeException e) {
+            assertTrue(e.getMessage().equals("failure: 401"));
+        }
     }
 
     @Test
     public void positiveLogout() {
         System.out.println("positiveLogout test");
-        client.preLogin("register magnus password8 magnus@gmail.com");
-        client.preLogin("logout");
-
+        UserData testUser = new UserData("magnus", "password8", "an@gmail.com");
+        AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
+        assertDoesNotThrow(() -> serverFacade.logout(result.authToken()));
+        try {
+            serverFacade.joinGame(result.authToken(), new JoinGameRequest("white", 1));
+            fail("Expected ServerFacadeException due to deleted authToken");
+        } catch (ServerFacadeException e) {
+            assertTrue(e.getMessage().equals("failure: 401"));
+        }
     }
 
     @Test
     public void negativeLogout() {
+        System.out.println("positiveLogout test -trying to logout twice");
+        UserData testUser = new UserData("magnus", "password8", "an@gmail.com");
+        AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
+        assertDoesNotThrow(() -> serverFacade.logout(result.authToken()));
+        try {
+            serverFacade.logout(result.authToken());
+            fail("Expected ServerFacadeException");
+        } catch(ServerFacadeException e) {
+            assertTrue(e.getMessage().equals("failure: 401"));
+        }
+    }
 
+    @Test
+    public void positiveCreateGame() {
+        assertTrue(true);
     }
 //    @Test
 //    void register() throws Exception {

@@ -20,10 +20,11 @@ public class BoardVisualizer {
   }
 
   private static void drawHeader(PrintStream out) {
-    out.print(moveCursorToLocation(1, 1));
-    out.print(SET_TEXT_BOLD + "  a b c d e f g h" + SET_TEXT_BOLD);
-    out.print(moveCursorToLocation(1, 2));
-    out.print(SET_TEXT_BOLD + "  ┌─┬─┬─┬─┬─┬─┬─┬─┐" + SET_TEXT_BOLD);
+//    out.print(moveCursorToLocation(1, 1));
+//    out.print(SET_TEXT_BOLD + "  a b c d e f g h" + SET_TEXT_BOLD);
+//    out.print(moveCursorToLocation(1, 2));
+//    out.print(SET_TEXT_BOLD + "  ┌─┬─┬─┬─┬─┬─┬─┬─┐" + SET_TEXT_BOLD);
+
   }
 
   private static void drawFooter(PrintStream out) {
