@@ -25,7 +25,7 @@ public class Server {
         Spark.put("/game", handler::joinGameHandler);
         Spark.delete("/session", handler::logoutHandler);
         Spark.delete("/db", handler::clearDatabaseHandler);
-        // possibly in need of error handling here???
+
         Spark.exception(Exception.class, this:: errorHandler);
         Spark.notFound((req, res) -> {
             var msg = String.format("[%s] %s not found", req.requestMethod(), req.pathInfo());

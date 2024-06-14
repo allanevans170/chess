@@ -31,8 +31,9 @@ public class ServerFacade {
   public Collection<GameData> listGames(String authToken) throws ServerFacadeException {
     return makeRequest("GET", "/game", authToken, null, listGames.class).games();
   }
-  public GameData getGame(String authToken, String gameId) throws ServerFacadeException {
-    return makeRequest("GET", "/game/" + gameId, authToken, null, GameData.class);
+
+  public GameData joinGame(String authToken, JoinGameRequest joiner) throws ServerFacadeException {
+    return makeRequest("PUT", "/game", authToken, joiner, GameData.class);
   }
 
   private <T> T makeRequest(String method, String path, Object header, Object request, Class<T> responseClass) throws ServerFacadeException {

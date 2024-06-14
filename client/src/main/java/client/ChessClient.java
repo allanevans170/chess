@@ -69,6 +69,7 @@ public class ChessClient {
         case "quit" -> quit();
         case "create" -> createGame(params[0]);
         case "join" -> joinGame(params);
+        case "observe" -> observeGame(Integer.parseInt(params[0]));
         default -> help();
       };
     } catch (ClientException ex) {
@@ -197,10 +198,12 @@ public class ChessClient {
 
   public String joinGame(String... params) throws ClientException {
     if (params.length >= 1) {
-      int gameNumber = Integer.parseInt(params[0]);
+      String playerColor = params[0];
+      int gameNumber = Integer.parseInt(params[1]);
       GameData game = (GameData) tempGamesList.toArray()[gameNumber - 1];
+      JoinGameRequest joiner = new JoinGameRequest(playerColor, game.getGameID());
       try {
-        serverFacade.joinGame(authToken, game.getGameID());
+        serverFacade.joinGame(authToken, joiner);
         return "You've joined the game: " + game.getGameName() + "\n";
       } catch (ServerFacadeException e) {
         throw new ClientException(e.getStatusCode(), e.getMessage());
@@ -209,20 +212,12 @@ public class ChessClient {
     throw new ClientException(400, "Expected: join <game number>\n");
   }
 
+  public String observeGame(int gameNumber) throws ClientException {
+    if (gameNumber < 1 || gameNumber > tempGamesList.size()) {
+      throw new ClientException(400, "Expected: observe <game number>\n");
+    }
+    GameData game = (GameData) tempGamesList.toArray()[gameNumber - 1];
+    return "You're observing the game: " + game.getGameName() + "\n";
+  }
 
-  // make a jar file (compile to get an executable)
-
-  // pre-login UI
-  // - help
-  // - quit
-  // - login
-  // - register
-
-  // post-login UI
-  // - help
-  // - logout
-  // - create games
-  // - list games
-  // - play game
-  // - observe game
 }

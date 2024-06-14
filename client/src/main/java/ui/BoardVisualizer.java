@@ -16,13 +16,14 @@ public class BoardVisualizer {
     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     out.print(ERASE_SCREEN);
 
+    drawHeader(out);
   }
 
   private static void drawHeader(PrintStream out) {
-//    out.print(moveCursorToLocation(1, 1));
-//    out.print(SET_TEXT_BOLD + "  a b c d e f g h" + RESET_TEXT_BOLD);
-//    out.print(moveCursorToLocation(1, 2));
-//    out.print(SET_TEXT_BOLD + "  ┌─┬─┬─┬─┬─┬─┬─┬─┐" + RESET_TEXT_BOLD);
+    out.print(moveCursorToLocation(1, 1));
+    out.print(SET_TEXT_BOLD + "  a b c d e f g h" + SET_TEXT_BOLD);
+    out.print(moveCursorToLocation(1, 2));
+    out.print(SET_TEXT_BOLD + "  ┌─┬─┬─┬─┬─┬─┬─┬─┐" + SET_TEXT_BOLD);
   }
 
   private static void drawFooter(PrintStream out) {
