@@ -43,4 +43,8 @@ public class GameData {
     return game;
   }
 
+  public String toString() {
+    return "GAME NAME: " +gameName + ", WHITE: " + whiteUsername + ", BLACK: " + blackUsername;
+  }
+
 }
