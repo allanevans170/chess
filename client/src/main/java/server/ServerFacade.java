@@ -25,14 +25,16 @@ public class ServerFacade {
     makeRequest("DELETE", "/db", null, null,null);
   }
 
-//  public void createGame(String authToken, String gameName) throws ServerFacadeException {
-//      makeRequest("POST", "/game", authToken, null);
-//  }
+  public void createGame(String authToken, GameData game) throws ServerFacadeException {
+      makeRequest("POST", "/game", authToken, game, GameData.class);
+  }
   public Collection<GameData> listGames(String authToken) throws ServerFacadeException {
-    return makeRequest("GET", "/game", authToken, null, null);
+    return makeRequest("GET", "/game", authToken, null, listGames.class).games();
+  }
+  public GameData getGame(String authToken, String gameId) throws ServerFacadeException {
+    return makeRequest("GET", "/game/" + gameId, authToken, null, GameData.class);
   }
 
-  //public
   private <T> T makeRequest(String method, String path, Object header, Object request, Class<T> responseClass) throws ServerFacadeException {
     try {
       URL url = (new URI(serverUrl + path)).toURL();

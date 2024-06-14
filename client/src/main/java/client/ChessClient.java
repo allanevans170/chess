@@ -67,6 +67,8 @@ public class ChessClient {
         case "logout" -> logout();
         case "list" -> listGames();
         case "quit" -> quit();
+        case "create" -> createGame(params[0]);
+        case "join" -> joinGame(params);
         default -> help();
       };
     } catch (ClientException ex) {
@@ -180,7 +182,32 @@ public class ChessClient {
     }
   }
 
+  public String createGame(String gameName) throws ClientException {
+    if (gameName == null || gameName.isEmpty()) {
+      throw new ClientException(400, "Expected: create <game name>\n");
+    }
+    GameData newGame = new GameData(gameName);
+    try {
+      serverFacade.createGame(authToken, newGame);
+      return "\"" + newGame.getGameName() + "\"Game created!\n";
+    } catch (ServerFacadeException e) {
+      throw new ClientException(e.getStatusCode(), e.getMessage());
+    }
+  }
 
+  public String joinGame(String... params) throws ClientException {
+    if (params.length >= 1) {
+      int gameNumber = Integer.parseInt(params[0]);
+      GameData game = (GameData) tempGamesList.toArray()[gameNumber - 1];
+      try {
+        serverFacade.joinGame(authToken, game.getGameID());
+        return "You've joined the game: " + game.getGameName() + "\n";
+      } catch (ServerFacadeException e) {
+        throw new ClientException(e.getStatusCode(), e.getMessage());
+      }
+    }
+    throw new ClientException(400, "Expected: join <game number>\n");
+  }
 
 
   // make a jar file (compile to get an executable)
