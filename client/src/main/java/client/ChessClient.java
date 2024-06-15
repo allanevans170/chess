@@ -7,19 +7,10 @@ import model.*;
 import server.ServerFacade;
 import server.ServerFacadeException;
 
-//import java.io.InputStream;
-//import java.io.InputStreamReader;
-//import java.net.HttpURLConnection;
-//import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
-//import java.util.Scanner;
 
 public class ChessClient {
-//  private static final String ESCAPE = "\u001b[";
-//  public static final String GREEN = ESCAPE + "32m";
-//  public static final String RESET = ESCAPE + "0m";
   private final ServerFacade serverFacade;
   private final String serverUrl;
   private String authToken;
