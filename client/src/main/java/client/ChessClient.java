@@ -94,12 +94,6 @@ public class ChessClient {
         currentStatus = Status.POST_LOGIN;
         return String.format("You created the account and are signed in as: %s\n", output.username());
       } catch (ServerFacadeException e) {
-//        if (e.getStatusCode() == 403) {
-//          throw new ClientException(403, "Error: username already taken");
-//        }
-//        else if (e.getStatusCode() == 400) {
-//          throw new ClientException(400, "Error: invalid input");
-//        } else { }
         throw new ClientException(e.getStatusCode(), e.getMessage());
       }
     }

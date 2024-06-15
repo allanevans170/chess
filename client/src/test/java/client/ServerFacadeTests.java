@@ -175,10 +175,38 @@ public class ServerFacadeTests {
     }
     @Test
     public void positiveJoinGame() {
-
+        System.out.println("positiveJoinGame test");
+        UserData testUser = new UserData("magnus", "password8", "another@chess.com");
+        AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
+        GameData game = new GameData("game1");
+        assertDoesNotThrow(() -> serverFacade.createGame(result.authToken(), game));
+        try {
+            Collection<GameData> gamesList = serverFacade.listGames(result.authToken());
+            assertTrue(gamesList.size() == 1);
+            GameData theGame = gamesList.iterator().next();
+            JoinGameRequest joiner = new JoinGameRequest("white", theGame.getGameID());
+            GameData joinedGame = serverFacade.joinGame(result.authToken(), joiner);
+            assertTrue(joinedGame.getWhiteUsername().equals("magnus"));
+        } catch (ServerFacadeException e) {
+            fail("ServerFacadeException" + e.getMessage());
+        }
     }
     @Test
     public void negativeJoinGame() {
-
+        System.out.println("negative JoinGame test - game doesn't exist");
+        UserData testUser = new UserData("magnus", "password8", "another@chess.com");
+        AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
+        GameData game = new GameData("game1");
+        assertDoesNotThrow(() -> serverFacade.createGame(result.authToken(), game));
+        try {
+            Collection<GameData> gamesList = serverFacade.listGames(result.authToken());
+            assertTrue(gamesList.size() == 1);
+            JoinGameRequest joiner = new JoinGameRequest("white", 3);
+            GameData joinedGame = serverFacade.joinGame(result.authToken(), joiner);
+            fail("can't join game - doesn't exist, expect exception");
+        } catch (ServerFacadeException e) {
+            System.out.println(e.getMessage());
+            assertEquals("failure: 401", e.getMessage());
+        }
     }
 }

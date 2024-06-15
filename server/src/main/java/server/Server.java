@@ -43,10 +43,6 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
-
-    private Object throwError(Request req, Response res) {
-        throw new RuntimeException("Server on fire");
-    }
     public Object errorHandler(Exception e, Request req, Response res) {
         var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         res.type("application/json");
