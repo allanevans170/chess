@@ -52,7 +52,12 @@ public class GameService {
       AuthData authenticated = authDAO.getAuth(authToken);
       GameData game = gameDAO.getGame(gameID);
 
-      if (game.getWhiteUsername() != null && playerColor.equals("WHITE") ||
+      if ((game.getWhiteUsername().equals( authenticated.username()) && playerColor.equals("WHITE")) ||
+              (game.getBlackUsername().equals(authenticated.username()) && playerColor.equals("BLACK"))) {
+        // readmit the player to the game
+        throw new ServiceException(99, "You're already logged in dog");
+      }
+      else if (game.getWhiteUsername() != null && playerColor.equals("WHITE") ||
               game.getBlackUsername() != null && playerColor.equals("BLACK")) {
         throw new ServiceException(403, "Error: already taken");              // player already taken
       }

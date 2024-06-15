@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import model.*;
 import server.ServerFacade;
 import server.ServerFacadeException;
+import ui.ChessVisualizer;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -183,8 +184,9 @@ public class ChessClient {
       GameData game = (GameData) tempGamesList.toArray()[gameNumber - 1];
       JoinGameRequest joiner = new JoinGameRequest(playerColor, game.getGameID());
       try {
-        serverFacade.joinGame(authToken, joiner);
-        return "You've joined the game: " + game.getGameName() + "\n";
+        GameData joined = serverFacade.joinGame(authToken, joiner);
+
+        return "You've joined the game: " + game.getGameName() + "\n" + ChessVisualizer.visualize(joined.getGame());
       } catch (ServerFacadeException e) {
         throw new ClientException(e.getStatusCode(), e.getMessage());
       }
