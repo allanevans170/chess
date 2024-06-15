@@ -30,7 +30,6 @@ public class ChessVisualizer {
 
   public static PrintStream visualize(ChessGame game) {
     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-
     //out.print(ERASE_SCREEN);
 
     printBlackBoard(out);
@@ -75,14 +74,9 @@ public class ChessVisualizer {
   }
 
   private static void drawHeader(PrintStream out, String headerText) {
-    int prefixLength = 1;//SQUARE_SIZE_IN_CHARS;
-    int suffixLength = 1;//SQUARE_SIZE_IN_CHARS;// - prefixLength - 1;
-
-    //out.print(EMPTY.repeat(prefixLength));
     out.print(" ");
     printHeaderText(out, headerText);
     out.print(" ");
-    //out.print(EMPTY.repeat(suffixLength));
   }
 
   private static void printHeaderText(PrintStream out, String player) {
@@ -110,35 +104,9 @@ public class ChessVisualizer {
         ChessPiece piece = game.getBoard().getPiece(new ChessPosition(8-boardRow, 8-boardCol));
         String backgroundSquareColor=isWhite ? SET_BG_COLOR_MAGENTA : SET_BG_COLOR_BLUE;
         out.print(backgroundSquareColor+ " " + (piece == null ? EMPTY : piece.toString()) + " ");
-
-//        if (squareRow == SQUARE_SIZE_IN_CHARS / 2) {
-//          int prefixLength = SQUARE_SIZE_IN_CHARS / 2;
-//          int suffixLength = SQUARE_SIZE_IN_CHARS - prefixLength - 1;
-//
-//          out.print(EMPTY.repeat(prefixLength));
-//          printPlayer(out, rand.nextBoolean() ? X : O);
-//          out.print(EMPTY.repeat(suffixLength));
-//        }
-//        else {
-//          out.print(EMPTY.repeat(SQUARE_SIZE_IN_CHARS));
-//        }
-
-//        if (boardCol < BOARD_SIZE_IN_SQUARES - 1) {
-//          // Draw right line
-//          setRed(out);
-//          out.print(EMPTY.repeat(LINE_WIDTH_IN_CHARS));
-//        }
-
         setBlack(out);
       }
-
       out.println();
-    //}
-  }
-
-  private static void setWhite(PrintStream out) {
-    out.print(SET_BG_COLOR_WHITE);
-    out.print(SET_TEXT_COLOR_WHITE);
   }
 
   private static void setBlack(PrintStream out) {
@@ -146,12 +114,4 @@ public class ChessVisualizer {
     out.print(SET_TEXT_COLOR_BLACK);
   }
 
-  private static void printPlayer(PrintStream out, String player) {
-    out.print(SET_BG_COLOR_WHITE);
-    out.print(SET_TEXT_COLOR_BLACK);
-
-    out.print(player);
-
-    setWhite(out);
-  }
 }
