@@ -16,7 +16,7 @@ public class BoardVisualizer {
     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     out.print(ERASE_SCREEN);
 
-    drawHeader(out);
   }
+
 
 }
