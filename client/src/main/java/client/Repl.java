@@ -21,7 +21,7 @@ public class Repl {
       String line = scanner.nextLine();
 
       try {
-        if (client.getStatus() == ChessClient.status.PRE_LOGIN) {
+        if (client.getStatus() == ChessClient.Status.PRE_LOGIN) {
           result = client.preLogin(line);
         } else {
           result = client.postLogin(line);

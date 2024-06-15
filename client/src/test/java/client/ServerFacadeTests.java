@@ -6,6 +6,8 @@ import server.ServerFacade;
 import model.*;
 import server.ServerFacadeException;
 
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ServerFacadeTests {
@@ -118,11 +120,65 @@ public class ServerFacadeTests {
 
     @Test
     public void positiveCreateGame() {
-        assertTrue(true);
+        System.out.println("positiveCreateGame test");
+        UserData testUser = new UserData("magnus", "password8", "email@chess.com");
+        AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
+        GameData game = new GameData("game1");
+        assertDoesNotThrow(() -> serverFacade.createGame(result.authToken(), game));
+        try {
+            Collection<GameData> gamesList = serverFacade.listGames(result.authToken());
+            assertTrue(gamesList.size() == 1);
+        } catch (ServerFacadeException e) {
+            fail("ServerFacadeException" + e.getMessage());
+        }
     }
-//    @Test
-//    void register() throws Exception {
-//        var authData = facade.register("player1", "password", "p1@email.com");
-//        assertTrue(authData.authToken().length() > 10);
-//    }
+    @Test
+    public void negativeCreateGame() {
+        System.out.println("negative createGame test - unauthorized user");
+        AuthData unauthorizedUser = new AuthData("badToken", "badUser");
+        GameData game = new GameData("game1");
+        try {
+            serverFacade.createGame(unauthorizedUser.authToken(), game);
+            fail("Expected ServerFacadeException");
+        } catch (ServerFacadeException e) {
+            assertTrue(e.getMessage().equals("failure: 401"));
+        }
+    }
+    @Test
+    public void positiveListGames() {
+        System.out.println("positive list game test");
+        UserData testUser = new UserData("magnus", "password8", "email@chess.com");
+        AuthData result = assertDoesNotThrow(() -> serverFacade.register(testUser));
+        GameData game = new GameData("game1");
+        GameData game2 = new GameData("game2");
+        GameData game3 = new GameData("game3");
+        assertDoesNotThrow(() -> serverFacade.createGame(result.authToken(), game));
+        assertDoesNotThrow(() -> serverFacade.createGame(result.authToken(), game2));
+        assertDoesNotThrow(() -> serverFacade.createGame(result.authToken(), game3));
+        try {
+            Collection<GameData> gamesList = serverFacade.listGames(result.authToken());
+            assertTrue(gamesList.size() == 3);
+        } catch (ServerFacadeException e) {
+            fail("ServerFacadeException" + e.getMessage());
+        }
+    }
+    @Test
+    public void negativeListGames() {
+        System.out.println("negative list Game test - unauthorized user");
+        AuthData unauthorizedUser = new AuthData("badToken", "badUser");
+        try {
+            serverFacade.listGames(unauthorizedUser.authToken());
+            fail("Expected ServerFacadeException");
+        } catch (ServerFacadeException e) {
+            assertTrue(e.getMessage().equals("failure: 401"));
+        }
+    }
+    @Test
+    public void positiveJoinGame() {
+
+    }
+    @Test
+    public void negativeJoinGame() {
+
+    }
 }

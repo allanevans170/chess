@@ -29,7 +29,7 @@ public class ServerFacade {
       makeRequest("POST", "/game", authToken, game, GameData.class);
   }
   public Collection<GameData> listGames(String authToken) throws ServerFacadeException {
-    return makeRequest("GET", "/game", authToken, null, listGames.class).games();
+    return makeRequest("GET", "/game", authToken, null, ListGames.class).games();
   }
 
   public GameData joinGame(String authToken, JoinGameRequest joiner) throws ServerFacadeException {

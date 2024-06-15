@@ -26,9 +26,9 @@ public class ChessClient {
 
   private Collection<GameData> tempGamesList;
 
-  private status currentStatus = status.PRE_LOGIN;
+  private Status currentStatus = Status.PRE_LOGIN;
 
-  public enum status {
+  public enum Status {
     PRE_LOGIN,
     POST_LOGIN
   }
@@ -38,7 +38,7 @@ public class ChessClient {
     this.serverUrl = serverUrl;
   }
 
-  public status getStatus() {
+  public Status getStatus() {
     return currentStatus;
   }
 
@@ -91,7 +91,7 @@ public class ChessClient {
         AuthData output = serverFacade.register(newUser);
         //System.out.println(output.toString());
         authToken = output.authToken();
-        currentStatus = status.POST_LOGIN;
+        currentStatus = Status.POST_LOGIN;
         return String.format("You created the account and are signed in as: %s\n", output.username());
       } catch (ServerFacadeException e) {
 //        if (e.getStatusCode() == 403) {
@@ -107,7 +107,7 @@ public class ChessClient {
   }
 
   public String login(String... params) throws ClientException {
-    if (currentStatus == status.POST_LOGIN) {
+    if (currentStatus == Status.POST_LOGIN) {
       throw new ClientException(400, "You are already logged in - log out in order to log in as a different user\n");
     }
     if (params.length >= 1) {
@@ -118,7 +118,7 @@ public class ChessClient {
         AuthData output = serverFacade.login(user);
         //System.out.println(output.toString());
         authToken = output.authToken();
-        currentStatus = status.POST_LOGIN;
+        currentStatus = Status.POST_LOGIN;
         return String.format("You signed in as %s\n", output.username());
       } catch (ServerFacadeException e) {
         throw new ClientException(e.getStatusCode(), e.getMessage());
@@ -128,7 +128,7 @@ public class ChessClient {
   }
 
   public String help() {
-    if (currentStatus == status.PRE_LOGIN) {
+    if (currentStatus == Status.PRE_LOGIN) {
       return """
           Help - provides possible commands
           Register <USERNAME> <PASSWORD> <EMAIL> - create an account
@@ -152,7 +152,7 @@ public class ChessClient {
     try {
       serverFacade.logout(authToken);
       authToken = null;
-      currentStatus = status.PRE_LOGIN;
+      currentStatus = Status.PRE_LOGIN;
       return ("You've signed out.\n");
     } catch (ServerFacadeException e) {
       throw new ClientException(e.getStatusCode(), e.getMessage());

@@ -9,7 +9,6 @@ import spark.Request;
 import spark.Response;
 
 import java.util.Collection;
-import java.util.Map;
 
 public class Handlers {
   private final ChessService chessService;
@@ -59,7 +58,7 @@ public class Handlers {
     try {
       String authToken = req.headers("Authorization");
       Collection<GameData> games = chessService.getGameService().listGames(authToken);
-      return new Gson().toJson(new listGames(games));
+      return new Gson().toJson(new ListGames(games));
     } catch (ServiceException e) {
       return handleExceptions(e, res);
     }
