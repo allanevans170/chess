@@ -2,6 +2,7 @@ package client;
 
 //import chess.ChessGame;
 //import chess.ChessPiece;
+import chess.ChessGame;
 import com.google.gson.Gson;
 import model.*;
 import server.ServerFacade;
@@ -184,9 +185,9 @@ public class ChessClient {
       GameData game = (GameData) tempGamesList.toArray()[gameNumber - 1];
       JoinGameRequest joiner = new JoinGameRequest(playerColor, game.getGameID());
       try {
-        GameData joined = serverFacade.joinGame(authToken, joiner);
-
-        return "You've joined the game: " + game.getGameName() + "\n" + ChessVisualizer.visualize(joined.getGame());
+        serverFacade.joinGame(authToken, joiner);
+        ChessGame newGame = new ChessGame();
+        return "You've joined the game: " + game.getGameName() + "\n" + ChessVisualizer.visualize(newGame);
       } catch (ServerFacadeException e) {
         throw new ClientException(e.getStatusCode(), e.getMessage());
       }

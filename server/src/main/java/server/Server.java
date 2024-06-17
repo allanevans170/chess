@@ -7,6 +7,9 @@ import java.util.Map;
 
 public class Server {
 
+    public Server() {
+        webSocketHandler = new WebSocketHandler();
+    }
     public static void main(String[] args) {
         new Server().run(8080);
     }
@@ -17,6 +20,8 @@ public class Server {
         Spark.staticFiles.location("web");
 
         Handlers handler = new Handlers();
+
+        Spark.webSocket("/ws", handler::webSocketHandler);
 
         Spark.post("/user", handler::registerHandler);
         Spark.post("/session", handler::loginHandler);

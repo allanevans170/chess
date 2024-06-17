@@ -33,7 +33,7 @@ public class ServerFacade {
   }
 
   public GameData joinGame(String authToken, JoinGameRequest joiner) throws ServerFacadeException {
-    return makeRequest("PUT", "/game", authToken, joiner, GameData.class);
+    return makeRequest("PUT", "/game", authToken, joiner, null);
   }
 
   private <T> T makeRequest(String method, String path, Object header, Object request, Class<T> responseClass) throws ServerFacadeException {

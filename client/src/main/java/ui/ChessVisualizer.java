@@ -28,7 +28,7 @@ public class ChessVisualizer {
     visualize(game);
   }
 
-  public static PrintStream visualize(ChessGame game) {
+  public static String visualize(ChessGame game) {
     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     //out.print(ERASE_SCREEN);
 
@@ -38,7 +38,7 @@ public class ChessVisualizer {
 
     out.print(SET_BG_COLOR_BLACK);
     out.print(SET_TEXT_COLOR_WHITE);
-    return out;
+    return out.toString();
   }
 
   public static void printWhiteBoard(PrintStream out) {
