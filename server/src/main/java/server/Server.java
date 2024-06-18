@@ -1,15 +1,12 @@
 package server;
 
 import com.google.gson.Gson;
+import server.websocket.WebSocketHandler;
 import spark.*;
 
 import java.util.Map;
 
 public class Server {
-
-    public Server() {
-        webSocketHandler = new WebSocketHandler();
-    }
     public static void main(String[] args) {
         new Server().run(8080);
     }
@@ -21,7 +18,7 @@ public class Server {
 
         Handlers handler = new Handlers();
 
-        Spark.webSocket("/ws", handler::webSocketHandler);
+        Spark.webSocket("/ws", WebSocketHandler.class);
 
         Spark.post("/user", handler::registerHandler);
         Spark.post("/session", handler::loginHandler);

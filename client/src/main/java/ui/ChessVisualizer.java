@@ -21,6 +21,7 @@ public class ChessVisualizer {
   private static final String O = " O ";
   private static Random rand = new Random();
 
+  //  8 java.lang.NullPointerException: Cannot invoke "chess.ChessGame.getBoard()" because "ui.ChessVisualizer.game" is null
   private static ChessGame game;
 
   public static void main(String[] args) {

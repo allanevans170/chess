@@ -1,9 +1,11 @@
 package websocket;
 
-import webSocketMessages.Notification;
+//import webSocketMessages.Notification;
+import websocket.messages.ServerMessage;
+
 import javax.websocket.*;
 
 
 public interface NotificationHandler {
-  void notify(Notification notification);
+  void notify(ServerMessage serverMessage);
 }

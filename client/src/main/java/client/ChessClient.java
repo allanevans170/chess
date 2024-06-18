@@ -12,7 +12,20 @@ import ui.ChessVisualizer;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class ChessClient {
+public class ChessClient implements ServerMessage{
+  public class Client implements ServerMessageObserver {
+  …
+    @Override
+    public void notify(ServerMessage message) {
+      switch (message.getServerMessageType()) {
+        case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
+        case ERROR -> displayError(((ErrorMessage) message).getErrorMessage());
+        case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame());
+      }
+    }
+  …
+  }
+
   private final ServerFacade serverFacade;
   private final String serverUrl;
   private String authToken;
