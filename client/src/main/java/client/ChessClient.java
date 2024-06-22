@@ -7,24 +7,25 @@ import com.google.gson.Gson;
 import model.*;
 import server.ServerFacade;
 import server.ServerFacadeException;
+import server.ServerMessageObserver;
 import ui.ChessVisualizer;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-public class ChessClient implements ServerMessage{
-  public class Client implements ServerMessageObserver {
-  …
-    @Override
-    public void notify(ServerMessage message) {
-      switch (message.getServerMessageType()) {
-        case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
-        case ERROR -> displayError(((ErrorMessage) message).getErrorMessage());
-        case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame());
-      }
-    }
-  …
-  }
+public class ChessClient implements ServerMessageObserver {  // implements ServerMessage
+//  public class Client implements ServerMessageObserver {
+//  …
+//    @Override
+//    public void notify(ServerMessage message) {
+//      switch (message.getServerMessageType()) {
+//        case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
+//        case ERROR -> displayError(((ErrorMessage) message).getErrorMessage());
+//        case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame());
+//      }
+//    }
+//  …
+//  }
 
   private final ServerFacade serverFacade;
   private final String serverUrl;
@@ -200,7 +201,7 @@ public class ChessClient implements ServerMessage{
       try {
         serverFacade.joinGame(authToken, joiner);
         ChessGame newGame = new ChessGame();
-        return "You've joined the game: " + game.getGameName() + "\n" + ChessVisualizer.visualize(newGame);
+        return "You've joined the game: " + game.getGameName() + "\n" + ChessVisualizer.visualize(newGame, playerColor);
       } catch (ServerFacadeException e) {
         throw new ClientException(e.getStatusCode(), e.getMessage());
       }

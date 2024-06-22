@@ -43,6 +43,9 @@ public class WebSocketHandler {
   }
 
   public void connect(Session session, String username, ConnectCommand connect) {
+    // add session and to connections
+    // create message/notification
+    // send message to all users in the game? // "broadcast"
   }
   public void makeMove(Session session, String username, MakeMoveCommand makeMove) {
 
